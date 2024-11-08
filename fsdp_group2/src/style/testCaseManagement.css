@@ -1,0 +1,12 @@
+/* src/style/testCaseManagement.css */
+
+/* Main content area - takes the remaining space */
+.testCaseManagement-layout {
+  margin-left: 300px; /* This pushes the main content to the right of the sidebar */
+  flex-grow: 1; /* Take up remaining space */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  gap: 30px;
+  background-color: #f9f9f9; /* Main content background */
+}

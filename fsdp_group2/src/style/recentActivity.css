@@ -1,0 +1,152 @@
+/* Container for Recent Activity */
+.recent-activity-container {
+    margin: 30px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+  }
+
+  .activity-controls{
+    display: flex;
+    gap: 10px;
+  }
+  
+  /* Header Section */
+  .activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #393d32;
+  }
+  
+  /* Search Box */
+  .search-container {
+    display: flex;
+    align-items: center;
+    background-color: #f9fbff;
+    border-radius: 5px;
+    padding: 5px 10px;
+  }
+  
+  .search-icon {
+    color: #7e7e7e;
+    margin-right: 5px;
+  }
+  
+  .search-container input {
+    border: none;
+    outline: none;
+    padding: 5px;
+    color: #b5b7c0;
+    background-color: #f9fbff;
+  }
+  
+  /* Filter Button */
+  .filter-button {
+    display: flex;
+    align-items: center;
+    background-color: #f9fbff;
+    color: #7e7e7e;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .filter-button:hover {
+    background-color: #ef0404;
+    color: #fff;
+  }
+  
+  /* Table styling */
+.activity-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #393d32;
+  }
+  
+  .activity-table th {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: #b5b7c0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .activity-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: #292d32;
+    font-weight: 500;
+    font-size: 14px;
+
+  }
+
+  .action-button {
+    border-radius: 5px;
+    padding: 5px 10px;
+  }
+
+  
+  /* Badge for results */
+  .result-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #fff;
+  }
+  
+  .result-badge.pass {
+    background-color: #a6e7d8;
+    color: #4caf50;
+    border: 1.5px solid #4caf50;
+  }
+  
+  .result-badge.fail {
+    background-color: #ffc5c5;
+    border: 1.5px solid #df0404;
+    color: #df0404;
+  }
+
+  /* Pagination styling */
+.pagination {
+    display: flex;
+    gap: 8px;
+    margin-top: 30px;
+    justify-content: flex-end;
+    font-size: 12px;
+  }
+  
+  .pagination button {
+    width: 32px; /* Set width and height to make buttons square */
+    height: 32px;
+    border: none;
+    background-color: #ddd;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px; /* Optional: slight rounding */
+    font-size: 14px;
+  }
+  
+  .pagination button.active {
+    background-color: #e1251b;
+    color: #fff;
+  }
+  
+  .pagination button:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+  }
+  
+  .pagination-ellipsis {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7e7e7e;
+  }
