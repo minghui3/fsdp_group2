@@ -1,0 +1,94 @@
+/* Container for the Test Case Summary */
+.summary {
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 20px;
+    margin: 30px;
+}
+
+.summary h2{
+    margin-top: 0;
+}
+
+.summary-data {
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+}
+
+/* Styling for each summary card */
+.summary-card {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding: 20px;
+    text-align: left;
+}
+
+/* Add a right border for the first two cards as a separator line */
+.summary-card:not(:last-child) {
+    border-right: 1px solid #f0f0f0; /* Separator line color */
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
+.summary-card .card-left {
+    flex-shrink: 0;
+    margin-right: 20px;
+}
+
+.summary-card .card-right {
+    flex-grow: 1;
+}
+
+.summary-card h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.summary-card p {
+    font-size: 24px;
+    margin: 0;
+    font-weight: bold;
+    color: #333;
+}
+
+.summary-card .percentage {
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: normal;
+}
+
+/* Green for percentage increase */
+.percentage.green {
+    color: green;
+}
+
+/* Red for percentage decrease */
+.percentage.red {
+    color: red;
+}
+
+/* Gray for no change (0%) */
+.percentage.gray {
+    color: gray;
+}
+
+/* Icons for the passed and failed cards */
+.summary-card.passed .card-icon {
+    color: #fff;
+    background-color: #4caf50;
+}
+
+.summary-card.failed .card-icon {
+    color: #fff;
+    background-color: #e1251b;
+}
+
+.card-icon {
+    padding: 20px;
+    border-radius: 50%;
+    background-color: #ff947a;
+    color: #fff;
+}

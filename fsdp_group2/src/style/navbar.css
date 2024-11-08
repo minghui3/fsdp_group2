@@ -1,0 +1,144 @@
+/* src/style/Navbar.css */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+}
+
+.navbar-left h2 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.navbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.search-container {
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5px 20px;
+    border-radius: 16px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background-color: #f9f9f9;
+}
+
+.search-icon {
+    color: #e1251b;
+    font-size: 20px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.profile-icon {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.profile-image{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.profile-info{
+    display: flex;
+    align-items: center;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+    text-align: left;
+}
+
+.profile-name{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.profile-username {
+    font-weight: bold;
+    font-size: 13px;
+    color: #333;
+}
+  
+.profile-role {
+    font-size: 11px;
+    color: #666;
+}
+  
+/* Dropdown arrow styling */
+.dropdown-arrow {
+    margin-left: 5px;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background-color: #fff;
+  color: #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  width: 150px;
+  padding: 10px;
+}
+
+.profile-dropdown ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-dropdown li {
+  margin: 10px 0;
+}
+
+.profile-dropdown a {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.profile-dropdown a:hover {
+  color: #4CAF50;
+}
+
+.notification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px; /* Set the width and height to create a square */
+    height: 35px;
+    color: #ffa412;
+    background-color: #fffaf1;
+    border-radius: 6px; /* Optional: rounded corners */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 20px;
+}
