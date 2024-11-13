@@ -1,6 +1,6 @@
 // shared/Navbar.js
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaSearch, FaBell, FaChevronDown } from 'react-icons/fa';
 import '../style/navbar.css'; // Import styling for the Navbar
 
@@ -8,6 +8,7 @@ import '../style/navbar.css'; // Import styling for the Navbar
 const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate(); // Initialize navigate
 
   // Mock user data
   const user = {
@@ -30,6 +31,14 @@ const Navbar = () => {
 
   // Set the title based on current path
   const pageTitle = pageTitles[location.pathname] || 'Dashboard';
+
+  // Logout function
+  const handleLogout = () => {
+    // Clear the user session (remove token from local storage, clear session, etc.)
+    localStorage.removeItem('authToken'); // Example if token is in local storage
+    // Redirect to login page
+    navigate('/');
+  };
 
   return (
     <nav className="navbar">
@@ -75,9 +84,7 @@ const Navbar = () => {
           {isProfileOpen && (
             <div className="profile-dropdown">
               <ul>
-                <li><Link to="/dashboard/profile">Profile</Link></li>
-                <li><Link to="/dashboard/settings">Settings</Link></li>
-                <li><Link to="/logout">Logout</Link></li>
+                <li onClick={handleLogout} style={{ cursor: 'pointer' }}>Logout</li>
               </ul>
             </div>
           )}

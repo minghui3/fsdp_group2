@@ -3,29 +3,18 @@ import React from 'react';
 import { FaCheckCircle, FaTimesCircle, FaCogs } from 'react-icons/fa'; // Import Font Awesome icons
 import '../style/testCaseSummary.css'; // Separate CSS file for styling
 
-const TestCaseSummary = () => {
-  // Mock data for the test case summary
-  const currentMonth = {
-    total: 100,
-    passed: 80,
-    failed: 20,
-  };
+const TestCaseSummary = ({ summaryData }) => {
+  // Destructure the summaryData prop
+  const { totalTestCase, currentMonth, lastMonth } = summaryData;
 
-  // Previous month's values for comparison
-  const lastMonth = {
-    total: 90,
-    passed: 70,
-    failed: 30,
-  };
-
-  // Calculate the percentage change compared to last month
+  // Function to calculate the percentage change
   const calculatePercentageChange = (current, last) => {
     return ((current - last) / last) * 100;
   };
 
   // Function to determine the color for the percentage change
   const getPercentageColor = (percentage) => {
-    return percentage > 0 ? 'green' : percentage < 0 ? 'red' : 'gray'; // Green for positive, Red for negative, Gray for no change
+    return percentage > 0 ? 'green' : percentage < 0 ? 'red' : 'gray';
   };
 
   return (
@@ -42,7 +31,7 @@ const TestCaseSummary = () => {
                 </div>
                 <div className="card-right">
                 <h3 style={{fontSize:'14px', color:'#ACACAC', fontWeight:'400'}}>Total Test Cases</h3>
-                <p style={{ fontSize:'32px', color:'#333'}}>{currentMonth.total}</p>
+                <p style={{ fontSize:'32px', color:'#333'}}>{totalTestCase.total}</p>
                 <div>
                     <span style={{fontSize:'11px'}} className={`percentage ${getPercentageColor(calculatePercentageChange(currentMonth.total, lastMonth.total))}`}>
                         <b>{currentMonth.total > lastMonth.total ? '↑ ' : '↓ '}</b>

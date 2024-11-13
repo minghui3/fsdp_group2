@@ -1,6 +1,7 @@
 // src/pages/Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';  // Import Axios
 import '../style/login.css'; // Import the CSS file
 import logo from '../logo.png'; // Update the logo path if needed
 
@@ -10,17 +11,23 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Mock authentication logic
-    const validUsername = 'user';
-    const validPassword = 'password';
+    try {
+      // Send a POST request to the backend login route
+      const response = await axios.post('http://localhost:5000/login', {
+        username,
+        password,
+      });
 
-    if (username === validUsername && password === validPassword) {
-      navigate('/dashboard');
-    } else {
-      setError('Invalid username or password');
+      // If login is successful, navigate to the dashboard
+      if (response.status === 200) {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      // Handle error (invalid username/password)
+      setError(err.response?.data?.message || 'Something went wrong');
     }
   };
 

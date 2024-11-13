@@ -1,55 +1,55 @@
+// src/components/TopFailingTests.js
 import React from 'react';
 
-const TopFailingTests = () => {
-  // Example data for top failing tests
-  const failingTests = [
-    { name: "Network Issue", failures: 50, total: 100 },
-    { name: "Code Defects", failures: 30, total: 100 },
-    { name: "Environment Inconsistencies", failures: 20, total: 100 },
-  ];
-
+const TopFailingTests = ({ failingTests }) => {
   // Calculating failure rate as a percentage
   const failureRate = failingTests.map(test => (test.failures / test.total) * 100);
 
   return (
-    <div style={{ padding: '20px 30px', backgroundColor: '#fff', borderRadius: '20px' }}>
+    <div style={{ padding: '20px 30px', backgroundColor: '#fff', borderRadius: '20px', width: '100%' }}>
       <h2>Top Failing Tests</h2>
+      
       {/* Header for the table */}
-      <div style={{ color:'#96A5B8', display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-        <div style={{ width: '50px', textAlign: 'center', fontWeight: 'bold' }}>#</div>
-        <div style={{ flex: 1, textAlign: 'left', paddingLeft: '10px', fontWeight: 'bold' }}>Test Name</div>
-        <div style={{ width: '300px', textAlign: 'center', fontWeight: 'bold' }}>Failure Rate</div>
-        <div style={{ width: '100px', textAlign: 'center', fontWeight: 'bold' }}>Failures</div>
+      <div style={{ color:'#96A5B8', display: 'flex', alignItems: 'center', marginBottom: '10px', fontWeight: 'bold', width: '100%' }}>
+        <div style={{ flex: '1', textAlign: 'center' }}>#</div>
+        <div style={{ flex: '3', textAlign: 'left', paddingLeft: '10px' }}>Test Name</div>
+        <div style={{ flex: '3', textAlign: 'center' }}>Failure Rate</div>
+        <div style={{ flex: '2', textAlign: 'center' }}>Failures</div>
       </div>
-      <div>
+
+      <div style={{ width: '100%' }}>
         {failingTests.map((test, index) => (
-          <div key={index} style={{ display: 'flex', alignItems: 'center', margin: '20px 0', paddingTop:'20px', borderTop:'1px solid #edf2f6'}}>
+          <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '15px 0', borderTop: index > 0 ? '1px solid #edf2f6' : 'none', width: '100%' }}>
             {/* Index number */}
-            <div style={{ width: '50px', textAlign: 'center', fontWeight: 'bold' }}>
+            <div style={{ flex: '1', textAlign: 'center', fontWeight: 'bold' }}>
               {index + 1}
             </div>
 
             {/* Test Name */}
-            <div style={{ flex: 1, textAlign: 'left', paddingLeft: '10px' }}>
-              {test.name}
+            <div style={{ flex: '3', paddingLeft: '10px' }}>
+              {test.testName}
             </div>
 
-            {/* Failure Rate as a progress bar */}
-            <div style={{ width: '150px', paddingLeft: '10px' }}>
+            {/* Failure Rate and Progress Bar */}
+            <div style={{ flex: '3', paddingLeft: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{
-                position: 'relative',
                 width: '100%',
                 height: '20px',
                 backgroundColor: '#ecaeae',
                 borderRadius: '10px',
                 overflow: 'hidden',
+                position: 'relative',
               }}>
                 <div style={{
                   width: `${failureRate[index]}%`,
                   height: '100%',
-                  backgroundColor: '#ef4444',
+                  backgroundColor: '#f44336',
                   borderRadius: '10px',
-                }} />
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                }}></div>
+                {/* Percentage inside the progress bar */}
                 <div style={{
                   position: 'absolute',
                   top: '0',
@@ -57,15 +57,16 @@ const TopFailingTests = () => {
                   transform: 'translateX(-50%)',
                   fontWeight: 'bold',
                   color: '#fff',
+                  fontSize: '12px',
                 }}>
-                  {Math.round(failureRate[index])}%
+                  {failureRate[index].toFixed(2)}%
                 </div>
               </div>
             </div>
 
             {/* Number of Failures */}
-            <div style={{ width: '100px', textAlign: 'center', fontWeight: 'bold' }}>
-              {test.failures}
+            <div style={{ flex: '2', textAlign: 'center' }}>
+              {test.failures} / {test.total}
             </div>
           </div>
         ))}
@@ -73,4 +74,5 @@ const TopFailingTests = () => {
     </div>
   );
 };
+
 export default TopFailingTests;

@@ -1,4 +1,6 @@
 /* Container for the dashboard layout */
+
+
 .dashboard-layout {
     display: flex;
     min-height: 100vh; /* Full height of the viewport */
@@ -107,81 +109,82 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .chart-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
   
-  .doughnut-container, 
-  .linegraph-container,
-  .auto-coverage-container,
-  .test-run-container,
-  .top-failing-tests-container,
-  .browser-coverage-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%; /* Inherit height from .chart-row */
-    box-sizing: border-box;
-  }
-  
-  .doughnut-container {
-    flex: 1;
-    padding-left:30px;
-  }
-  
-  .linegraph-container {
-    flex: 2;
-    padding: 0px 30px;
-  }
-
-  .auto-coverage-container,
-  .top-failing-tests-container {
-    flex: 2;
-    padding: 0px 30px;
-  }
-  
-  .test-run-container {
-    flex: 1;
-    padding-right:30px;
-  }
-  
-  /* Ensure canvas takes up 100% of the container */
-.doughnut-container canvas,
-.linegraph-container canvas,
-.auto-coverage-container canvas,
-.test-run-container canvas {
-  height: 100% !important; /* Force canvas to stretch */
-  width: 100% !important;  /* Force canvas to stretch */
+  /* General container for each row with fixed height */
+.chart-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 400px; /* Set a consistent fixed height for all rows */
+  gap: 20px; /* Space between charts */
+  box-sizing: border-box;
+  padding: 0 30px;
 }
 
-/* Browser Coverage specific styling */
+/* Ensures each container stretches to full height of the row */
+.doughnut-container, 
+.linegraph-container, 
+.auto-coverage-container, 
+.test-run-container, 
+.top-failing-tests-container, 
 .browser-coverage-container {
-    flex: 1;
-    position: relative;
-    margin-right:30px;
-    background-color: #fff;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Full height of the row */
+  width: 100%; /* Full width according to flex */
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 10px; /* Optional: internal padding */
+  box-sizing: border-box;
+}
+
+/* Specific flex ratios for each row */
+.chart-row:first-child .doughnut-container {
+  flex: 1;
+}
+.chart-row:first-child .linegraph-container {
+  flex: 2;
+}
+
+.chart-row:nth-child(2) .auto-coverage-container {
+  flex: 2;
+}
+.chart-row:nth-child(2) .test-run-container {
+  flex: 1;
+}
+
+.chart-row:nth-child(3) .top-failing-tests-container {
+  flex: 2;
+}
+.chart-row:nth-child(3) .browser-coverage-container {
+  flex: 1;
+}
+
+/* Ensure canvas elements take up full space within their containers */
+
+.linegraph-container canvas,
+.auto-coverage-container canvas,
+.test-run-container canvas,
+.top-failing-tests-container canvas,
+.browser-coverage-container canvas {
+  height: 100% !important; /* Stretch to full container height */
+  width: 100% !important;  /* Stretch to full container width */
+}
+
+
+  @media (max-width: 768px) {
+    .chart-row {
+      flex-direction: column;
+    }
   
-  .browser-coverage-container svg {
-    width: 100%;
-    height: auto;
-    max-width: 100%; /* Ensure SVG scales properly */
-    max-height: 500px; /* Optional: limit height to avoid stretching */
-    border-radius: 8px;
-  }
-  
-  /* Ensure canvas takes up 100% of the container */
-  .doughnut-container canvas,
-  .linegraph-container canvas,
-  .auto-coverage-container canvas,
-  .test-run-container canvas {
-    height: 100% !important; /* Force canvas to stretch */
-    width: 100% !important;  /* Force canvas to stretch */
+    .doughnut-container,
+    .linegraph-container,
+    .auto-coverage-container,
+    .test-run-container,
+    .top-failing-tests-container,
+    .browser-coverage-container {
+      min-height: 250px; /* Adjust height for smaller screens */
+      margin-bottom: 20px; /* Add spacing between charts */
+    }
   }

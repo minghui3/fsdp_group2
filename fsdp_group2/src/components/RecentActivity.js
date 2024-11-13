@@ -1,41 +1,84 @@
-// src/components/RecentActivity.js
-import React, { useState } from 'react'; // Add useState here
-import { FaSearch, FaFilter, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaSearch, FaFilter } from 'react-icons/fa';
 import '../style/recentActivity.css'; // Import styling for recent activity
 
 const RecentActivity = () => {
-  // Mock data for recent activity
-  const recentActivities = [
-    { id: 1089, name: 'Load Account Balance Information', executedBy: 'Jerome', date: '2023-11-07', result: 'Passed' },
-    { id: 1088, name: 'Display Alerts for Unusaual Activity', executedBy: 'Mathryn', date: '2023-11-06', result: 'Failed' },
-    { id: 1087, name: 'Cancel Pending Payment', executedBy: 'Jacob', date: '2023-11-05', result: 'Passed' },
-    { id: 1086, name: 'Load Account Balance Information', executedBy: 'Jerome', date: '2023-11-07', result: 'Passed' },
-    { id: 1085, name: 'Display Alerts for Unusaual Activity', executedBy: 'Mathryn', date: '2023-11-06', result: 'Failed' },
-    { id: 1084, name: 'Cancel Pending Payment', executedBy: 'Jacob', date: '2023-11-05', result: 'Passed' },
-    { id: 1083, name: 'Display Alerts for Unusaual Activity', executedBy: 'Mathryn', date: '2023-11-06', result: 'Failed' },
-    { id: 1082, name: 'Cancel Pending Payment', executedBy: 'Jacob', date: '2023-11-05', result: 'Passed' },
-    // Add more mock activities as needed
-  ];
+  // State variables
+  const [recentActivities, setRecentActivities] = useState([]); // To hold fetched activities
+  const [filteredActivities, setFilteredActivities] = useState([]); // To hold filtered activities based on search and filters
+  const [searchQuery, setSearchQuery] = useState(''); // To hold the search query
 
-  const mockData = Array.from({ length: 400 }, (_, i) => ({
-    id: i + 1,
-    name: `Test Case ${i + 1}`,
-    executedBy: `User ${Math.floor(Math.random() * 10)}`,
-    date: `2024-11-07`,
-    result: i % 2 === 0 ? 'Pass' : 'Fail',
-  }));
+  // Filter state
+  const [selectedResult, setSelectedResult] = useState(''); // To hold the selected result filter
+  const [selectedExecutedBy, setSelectedExecutedBy] = useState(''); // To hold the selected executed by filter
+  const [startDate, setStartDate] = useState(''); // To hold the selected start date filter
+  const [endDate, setEndDate] = useState(''); // To hold the selected end date filter
+  const [isFilterVisible, setIsFilterVisible] = useState(false); // To control visibility of filter dropdown
 
+  // Fetch recent activities from the backend when the component mounts
+  useEffect(() => {
+    const fetchRecentActivities = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/recent-activity'); // Replace with your backend URL
+        const data = await response.json();
+        setRecentActivities(data); // Set the fetched data
+        setFilteredActivities(data); // Initially, set all data as filtered
+      } catch (error) {
+        console.error('Failed to fetch recent activities:', error);
+      }
+    };
+
+    fetchRecentActivities();
+  }, []);
+
+  // Handle search input change
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Function to handle search functionality
+  const handleSearch = () => {
+    const filtered = recentActivities.filter((activity) =>
+      activity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      activity.executedBy.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredActivities(filtered);
+  };
+
+  // Function to apply filters
+  const applyFilters = () => {
+    let filtered = recentActivities;
+
+    // Filter by result
+    if (selectedResult) {
+      filtered = filtered.filter((activity) => activity.result === selectedResult);
+    }
+
+    // Filter by executed by
+    if (selectedExecutedBy) {
+      filtered = filtered.filter((activity) => activity.executedBy.toLowerCase().includes(selectedExecutedBy.toLowerCase()));
+    }
+
+    // Filter by date range
+    if (startDate) {
+      filtered = filtered.filter((activity) => new Date(activity.date) >= new Date(startDate));
+    }
+    if (endDate) {
+      filtered = filtered.filter((activity) => new Date(activity.date) <= new Date(endDate));
+    }
+
+    setFilteredActivities(filtered); // Update filtered activities
+    setIsFilterVisible(false); // Hide filter dropdown after applying
+  };
+
+  // Pagination logic
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(mockData.length / itemsPerPage);
-
-  // State for current page
+  const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Calculate items for the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = mockData.slice(startIndex, startIndex + itemsPerPage);
+  const currentItems = filteredActivities.slice(startIndex, startIndex + itemsPerPage);
 
-  // Pagination logic to handle range display (e.g., 1, 2, 3, ... 40)
   const handleClickPage = (page) => {
     setCurrentPage(page);
   };
@@ -48,7 +91,7 @@ const RecentActivity = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  // Determine the range of page numbers to display
+  // Pagination range logic
   const getPaginationRange = () => {
     const range = [];
     if (totalPages <= 5) {
@@ -65,6 +108,10 @@ const RecentActivity = () => {
     return range;
   };
 
+  // Toggle filter visibility
+  const toggleFilterVisibility = () => {
+    setIsFilterVisible((prev) => !prev);
+  };
 
   return (
     <div className="recent-activity-container">
@@ -73,12 +120,64 @@ const RecentActivity = () => {
         <h2>Recent Activity</h2>
         <div className="activity-controls">
           <div className="search-container">
-            <FaSearch className="search-icon" />
-            <input type="text" placeholder="Search activity..." />
+            <input
+              type="text"
+              placeholder="Search activity..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+            <button onClick={handleSearch} style={{ border: 'none', backgroundColor: 'transparent' }}>
+              <FaSearch className="search-icon" />
+            </button>
           </div>
-          <button className="filter-button">
-            <FaFilter /> Filter
-          </button>
+
+          {/* Filter Button (with dropdown) */}
+          <div className="filter-container">
+            <button onClick={toggleFilterVisibility} className="filter-button">
+              <FaFilter /> Filter
+            </button>
+
+            {/* Filter Dropdown */}
+            {isFilterVisible && (
+              <div className="filter-dropdown">
+                <div>
+                  <label>Filter by Result:</label>
+                  <select
+                    value={selectedResult}
+                    onChange={(e) => setSelectedResult(e.target.value)}
+                  >
+                    <option value="">All</option>
+                    <option value="Passed">Passed</option>
+                    <option value="Failed">Failed</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Filter by Executed By:</label>
+                  <input
+                    type="text"
+                    placeholder="Search executed by..."
+                    value={selectedExecutedBy}
+                    onChange={(e) => setSelectedExecutedBy(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label>Filter by Date:</label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                  <span> to </span>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </div>
+                <button onClick={applyFilters}>Apply Filters</button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -102,15 +201,13 @@ const RecentActivity = () => {
               <td>{item.executedBy}</td>
               <td>{item.date}</td>
               <td>
-                <span
-                  className={`result-badge ${item.result === 'Pass' ? 'pass' : 'fail'}`}
-                >
+                <span className={`result-badge ${item.result === 'Passed' ? 'pass' : 'fail'}`}>
                   {item.result}
                 </span>
               </td>
               <td>
-                <button className="action-button" style={{marginRight:'10px', backgroundColor:'#ff947a',border:'1px solid #ff947a'}}>Edit</button>
-                <button className="action-button" style={{backgroundColor:'#e1251b', border:'1px solid #e1251b'}}>Delete</button>
+                <button className="action-button" style={{ marginRight: '10px', backgroundColor: '#ff947a', border: '1px solid #ff947a' }}>Edit</button>
+                <button className="action-button" style={{ backgroundColor: '#e1251b', border: '1px solid #e1251b' }}>Delete</button>
               </td>
             </tr>
           ))}
@@ -124,9 +221,7 @@ const RecentActivity = () => {
         </button>
         {getPaginationRange().map((page, index) =>
           page === '...' ? (
-            <span key={index} className="pagination-ellipsis">
-              ...
-            </span>
+            <span key={index} className="pagination-ellipsis">...</span>
           ) : (
             <button
               key={index}
@@ -141,7 +236,6 @@ const RecentActivity = () => {
           &gt;
         </button>
       </div>
-
     </div>
   );
 };

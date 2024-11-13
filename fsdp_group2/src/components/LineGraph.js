@@ -5,18 +5,13 @@ import { FaWeight } from 'react-icons/fa';
 
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend);
 
-const LineGraph = () => {
-  // Example data for the past 10 days
-  const dates = ["2023-10-01", "2023-10-02", "2023-10-03", "2023-10-04", "2023-10-05", "2023-10-06", "2023-10-07", "2023-10-08", "2023-10-09", "2023-10-10"];
-  const passCounts = [5, 6, 8, 10, 9, 7, 6, 8, 9, 10];
-  const failCounts = [2, 3, 2, 1, 3, 4, 3, 2, 1, 2];
-
+const LineGraph = ({ dateForLast10Days, passData, failData }) => {
   const data = {
-    labels: dates,
+    labels: dateForLast10Days, // Dates for the past 10 days
     datasets: [
       {
         label: 'Passed',
-        data: passCounts,
+        data: passData, // Corrected to use 'passData' from props
         borderColor: '#4caf50',
         backgroundColor: 'rgba(76, 175, 80, 0.2)',
         pointBackgroundColor: '#4caf50',
@@ -25,7 +20,7 @@ const LineGraph = () => {
       },
       {
         label: 'Failed',
-        data: failCounts,
+        data: failData, // Corrected to use 'failData' from props
         borderColor: '#e74c3c',
         backgroundColor: 'rgba(231, 76, 60, 0.2)',
         pointBackgroundColor: '#e74c3c',
@@ -39,7 +34,7 @@ const LineGraph = () => {
     responsive: true,
     plugins: {
       legend: {
-        display: false,
+        display: false, // Show legend to distinguish Passed and Failed
       },
       tooltip: {
         callbacks: {
