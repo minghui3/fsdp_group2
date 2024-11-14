@@ -2,6 +2,10 @@ const moment = require('moment');
 const testResultController = require('./testResultController');
 const getDashboard = async (req,res) =>{
     const recentData = await testResultController.fetchAllResults();
+    const formattedData = recentData.map(result =>{
+        result.date = new Date(result.date).toISOString().split('T')[0];
+        return result;
+    })
     const passCount = recentData.filter(test => test.result === 'Passed').length;
     const failCount = recentData.filter(test => test.result === 'Failed').length;
 
@@ -10,11 +14,11 @@ const getDashboard = async (req,res) =>{
     );
 
     const passCountForLast10Days = dateForLast10Days.map(date =>
-        recentData.filter(test => test.date === date && test.result === 'Passed').length
+        formattedData.filter(test => test.date === date && test.result === 'Passed').length
     );
 
     const failCountForLast10Days = dateForLast10Days.map(date =>
-        recentData.filter(test => test.date === date && test.result === 'Failed').length
+        formattedData.filter(test => test.date === date && test.result === 'Failed').length
     );
 
     // 3 look for most recently failed test

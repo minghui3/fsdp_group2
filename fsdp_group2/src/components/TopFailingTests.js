@@ -12,8 +12,8 @@ const TopFailingTests = ({ failingTests }) => {
       <div style={{ color:'#96A5B8', display: 'flex', alignItems: 'center', marginBottom: '10px', fontWeight: 'bold', width: '100%' }}>
         <div style={{ flex: '1', textAlign: 'center' }}>#</div>
         <div style={{ flex: '3', textAlign: 'left', paddingLeft: '10px' }}>Test Name</div>
-        <div style={{ flex: '3', textAlign: 'center' }}>Failure Rate</div>
-        <div style={{ flex: '2', textAlign: 'center' }}>Failures</div>
+        {/*<div style={{ flex: '3', textAlign: 'center' }}>Failure Rate</div>*/}
+        <div style={{ flex: '2', textAlign: 'center' }}>Timestamp</div>
       </div>
 
       <div style={{ width: '100%' }}>

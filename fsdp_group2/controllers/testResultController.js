@@ -3,7 +3,12 @@ const {cache} = require('../cache');
 const getAllResults = async (req, res) => {
     try {
         const dataResultsArray = await fetchAllResults();
-        res.status(200).json(dataResultsArray);
+        const formattedResultsArray = dataResultsArray.map(result => {
+            // Format the date to YYYY-MM-DD
+            result.date = new Date(result.date).toISOString().split('T')[0];
+            return result;
+        });
+        res.status(200).json(formattedResultsArray);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error" });
