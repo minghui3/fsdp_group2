@@ -50,7 +50,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Second row: Auto Coverage and Test Run Comparison */}
+      {/* Second row: Auto Coverage and Test Run Comparison
       <div className="chart-row">
         <div className="auto-coverage-container">
           <AutoCoverageChart 
@@ -62,12 +62,12 @@ const Dashboard = () => {
         <div className="test-run-container">
           <TestRunComparisonChart />
         </div>
-      </div>
+      </div> */}
 
-      {/* Third Row: Top Failing Tests and Browser Coverage */}
+      {/* Third Row: Recent Failed Test*/}
       <div className="chart-row" style={{marginBottom:'30px'}}>
           <div className="top-failing-tests-container">
-            <TopFailingTests failingTests={dashboardData.topFailingTests} />
+            <TopFailingTests failingTests={dashboardData.recentFailedTests.recentFailedRecord} />
           </div>
         </div>
       </div>

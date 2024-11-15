@@ -14,6 +14,7 @@ const TestCaseManagement = () => {
     lastMonth: {},
   });
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Fetch data from the backend when the component mounts
   useEffect(() => {
@@ -29,12 +30,18 @@ const TestCaseManagement = () => {
         console.error('Error fetching test case summary:', error);
         setError('Failed to fetch test case summary');
       }
+      finally{
+        setLoading(false);
+      }
     };
 
     fetchSummaryData();
   }, []);
 
-  // If there is an error fetching data
+  if (loading){
+    return <div>Loading: {loading}</div>
+  }
+    // If there is an error fetching data
   if (error) {
     return <div>Error: {error}</div>;
   }
