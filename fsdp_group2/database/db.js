@@ -15,6 +15,11 @@ const connection = async () =>{
     }
 }
 
-const getDB = () => db;
+const getDB = async() => {
+    if (!db){
+        await connection();
+    }
+    return db;
+}
 
 module.exports = {connection , getDB}

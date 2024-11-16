@@ -17,7 +17,7 @@ const getAllResults = async (req, res) => {
 
 //meant for cache
 async function fetchAllResults() {
-    const db = getDB();
+    const db = await getDB();
     const collection = db.collection("test_results_chrome");
     const dataResults = await collection.find().toArray();
     

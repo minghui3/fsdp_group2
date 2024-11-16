@@ -4,6 +4,9 @@ import React from 'react';
 const TopFailingTests = ({ failingTests }) => {
   // Calculating failure rate as a percentage
   // const failureRate = failingTests.map(test => (test.failures / test.total) * 100);
+  if (!failingTests) {
+    return <div>No failing tests to display.</div>;
+  }
   return (
     <div style={{ padding: '20px 30px', backgroundColor: '#fff', borderRadius: '20px', width: '100%' }}>
       <h2>Most Recently Failed Test</h2>
@@ -17,7 +20,7 @@ const TopFailingTests = ({ failingTests }) => {
       </div>
 
       <div style={{ width: '100%' }}>
-        {failingTests.length > 0 && (
+        {failingTests&& (
           <div style={{ display: 'flex', alignItems: 'center', padding: '15px 0', borderTop: 'none', width: '100%' }}>
             {/* Index number */}
             <div style={{ flex: '1', textAlign: 'center', fontWeight: 'bold' }}>
@@ -63,7 +66,7 @@ const TopFailingTests = ({ failingTests }) => {
               </div>
             </div> */}
 
-            {/* Number of Failures */}
+            {/*Date*/}
             <div style={{ flex: '2', textAlign: 'center' }}>
               {failingTests.date}
             </div>
