@@ -1,70 +1,51 @@
-# Getting Started with Create React App
+# TestBridge
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![image](https://github.com/user-attachments/assets/d960480d-1409-4dbc-9fc4-4d9d16b652f5)
 
-## Available Scripts
+## What is TestBridge?
+- TestBridge is our main prototype to our solution in order to enable broswer automation. TestBridge is a user-friendly platform that is designed to make it easier for users to view results from test cases. It offers a comprehensive inteface that showcases results of these test cases through detailed dashboards, interactive data visualizations and summarized data reports. With TestBridge, it provides an easy access to in-depth data analysis so that users can make data-driven decisions to ensure continuous improvement in the overall quality of their application.
 
-In the project directory, you can run:
+## TestBridge's Features:
+### Detailed Dashboard:
+- A dashboard featuring three data visualizations that display the total number of test cases run and their status.
+- These data visualizations offer a better data illustration of the test case results
 
-### `npm start`
+### View recent test cases:
+- Users can view a table which gets populated with test cases with the most recent test cases being documented at the top of the table.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Customizable Filters and Search:
+- Users can filter the test cases by date and status to get specific test cases for a more detailed analysis of the results stored.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+## Technologies Used For Our Solution:
+- **Front-End:**
+  - React.js
+- **Back-End**
+  - Node.js
+  - Maven
+  - Express.js
+- **Databases**
+  - PostgreSQL
+  - MongoDB Atlas
+- **Testing Framework**
+  - Selenium WebDriver
+  - Selenium Grid
+  - Cucumber
+- **Other Tools**
+  - CI/CD: Jenkins
+  - Containerization Platform: Docker
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Road Map:
+![image](https://github.com/user-attachments/assets/4c616a21-ca42-416f-89aa-24c7d94b2749)
 
-### `npm run build`
+# Screenshots:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Dashboard
+![image](https://github.com/user-attachments/assets/29a517b1-2124-492e-9d03-88c11c46532f)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Test Case Management Page
+![image (1)](https://github.com/user-attachments/assets/49924ad3-0efa-49d9-822e-45f53f22e103)
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
