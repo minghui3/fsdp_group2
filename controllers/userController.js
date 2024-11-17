@@ -7,7 +7,7 @@ const getUser = async (req, res) => {
 
     try {
         await mongoose.connect(process.env.MONGOURI, {
-            dbName: process.env.USERDB,
+            dbName: "Users",
         });
         const result = await User.findOne(
             { email: email, password: password },

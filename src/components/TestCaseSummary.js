@@ -9,6 +9,9 @@ const TestCaseSummary = ({ summaryData }) => {
 
   // Function to calculate the percentage change
   const calculatePercentageChange = (current, last) => {
+    if (last == 0) {
+        return 100;
+    }
     return ((current - last) / last) * 100;
   };
 
