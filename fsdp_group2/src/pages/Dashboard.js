@@ -64,10 +64,10 @@ const Dashboard = () => {
         </div>
       </div> */}
 
-      {/* Third Row: Recent Failed Test*/}
+      {/* Third Row: Top Failing Tests and Browser Coverage */}
       <div className="chart-row" style={{marginBottom:'30px'}}>
           <div className="top-failing-tests-container">
-            <TopFailingTests failingTests={dashboardData.recentFailedTests.recentFailedRecord} />
+            <TopFailingTests failingTests={dashboardData.recentFailedTests.failingTests} />
           </div>
         </div>
       </div>

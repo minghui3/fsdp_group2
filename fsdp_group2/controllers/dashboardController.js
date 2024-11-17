@@ -25,9 +25,9 @@ const getDashboard = async (req,res) =>{
     const recentFailedRecord = recentData
         .filter(test => test.result === "Failed")
         .sort((a,b) => new Date(b.date) - new Date(a.date))
-        .shift();
+        .at(0);
     // Construct the response object
-    console.log(recentFailedRecord);
+
 
     const responseData = {
         doughnut: { 
@@ -40,7 +40,7 @@ const getDashboard = async (req,res) =>{
         failCount: failCountForLast10Days,
         },
         recentFailedTests: {
-            recentFailedRecord
+           failingTests: recentFailedRecord
         }
     };
 
