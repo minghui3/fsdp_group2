@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const dbConfig = require("../config/mongodb.config");
 const { getDBConnection } = require("../database/db");
 
 const dbConnection = getDBConnection("TestBridge"); 
