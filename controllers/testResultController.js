@@ -28,12 +28,16 @@ const getAllResults = async (req, res) => {
 
 const addResult = async (req, res) => {
     try {
-        console.log(req);
+        console.log(req.body);
 
-        // const model = dbConnection.model(`test_results_${browser}`, testResultSchema, `test_results_${browser}`);
-        // const parsedJSON = parseTestResult(browser);
-        // const newTestResult = new model(parsedJSON);
-        // await newTestResult.save();  
+        const browser = req.body.browser;
+        const dbName = req.body.dbName;
+
+        const dbConnection = getDBConnection(dbName);
+        const model = dbConnection.model(`test_results_${browser}`, testResultSchema, `test_results_${browser}`);
+        const parsedJSON = parseTestResult(req.body.result);
+        const newTestResult = new model(parsedJSON);
+        await newTestResult.save();  
 
         res.status(200).send("Added test results successfully");
     }
