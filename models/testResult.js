@@ -12,7 +12,7 @@ const stepMatchSchema = new mongoose.Schema({
 
 const resultSchema = new mongoose.Schema({
     status: { 
-        type: Boolean,
+        type: String,
         required: true,
     },
     duration: Number // ignore if step is in before/after instead of steps 
