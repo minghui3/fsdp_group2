@@ -1,14 +1,20 @@
 const mongoose = require("mongoose");
+const { getDBConnection } = require("../database/db");
+
+const dbConnection = getDBConnection("TestBridge"); 
 
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
+        required: true,
     },
     password: {
         type: String,
+        required: true,
     },
     name: {
         type: String,
+        required: true,
     },
     photoPath: {
         type: String,
@@ -20,4 +26,4 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = dbConnection.model("User", userSchema);
