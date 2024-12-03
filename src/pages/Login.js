@@ -6,7 +6,7 @@ import '../style/login.css'; // Import the CSS file
 import logo from '../logo.png'; // Update the logo path if needed
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -17,14 +17,16 @@ const Login = () => {
     try {
       // Send a POST request to the backend login route
       const response = await axios.post('http://localhost:5000/login', {
-        username,
+        email,
         password,
       });
 
       // If login is successful, navigate to the dashboard
       if (response.status === 200) {
+        localStorage.setItem("user", JSON.stringify(response));
         navigate('/dashboard');
       }
+
     } catch (err) {
       // Handle error (invalid username/password)
       setError(err.response?.data?.message || 'Something went wrong');
@@ -39,11 +41,11 @@ const Login = () => {
         </div>
         <form onSubmit={handleLogin}>
           <div>
-            <label>Username:</label>
+            <label>Email:</label>
             <input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
