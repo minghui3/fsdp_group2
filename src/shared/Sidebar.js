@@ -24,7 +24,7 @@ const Sidebar = () => {
         <li className="nav-item">
           <Link className="nav-link" to="/test-case-management">
             <FaTasks className="sidebar-icon" />
-            <span className="menu-title">Task Case Management</span>
+            <span className="menu-title">Test Case Management</span>
             <FaChevronRight className="icon-right" /> {/* Right arrow */}
           </Link>
         </li>

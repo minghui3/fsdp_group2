@@ -4,9 +4,10 @@
     background-color: #fff;
     border-radius: 20px;
     margin: 30px;
+    width: 100%;
 }
 
-.summary h2{
+.summary h2 {
     margin-top: 0;
 }
 
@@ -26,8 +27,9 @@
 }
 
 /* Add a right border for the first two cards as a separator line */
-.summary-card:not(:last-child) {
-    border-right: 1px solid #f0f0f0; /* Separator line color */
+.summary-card:nth-child(2) {
+    border-right: 1px solid #f0f0f0;
+    border-left: 1px solid #f0f0f0;
     padding-right: 20px;
     margin-right: 20px;
 }

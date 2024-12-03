@@ -148,6 +148,9 @@ const Dashboard = () => {
             <div className="dashboard-content">
                 <Navbar />
                 <div className="chart-row">
+                    <TestCaseSummary summaryData={testCaseData} />
+                </div>
+                <div className="chart-row">
                     <div className="doughnut-container">
                         <DoughnutChart resultCount={resultCount} />
                     </div>
@@ -157,9 +160,6 @@ const Dashboard = () => {
                             failedTestCases={failData}
                         />
                     </div>
-                </div>
-                <div className="chart-row" style={{ marginBottom: "30px" }}>
-                    <TestCaseSummary summaryData={testCaseData} />
                 </div>
             </div>
         </div>
