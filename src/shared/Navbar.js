@@ -47,7 +47,7 @@ const Navbar = () => {
         <h2>{pageTitle}</h2>
       </div>
 
-      {/* Center search bar with icon */}
+      {/* Center search bar with icon
       <div className="navbar-center">
         <div className="search-container">
           <input 
@@ -57,7 +57,7 @@ const Navbar = () => {
           />
           <FaSearch className="search-icon" />
         </div>
-      </div>
+      </div> */}
 
       {/* Notification and profile dropdown on the right */}
       <div className="navbar-right">

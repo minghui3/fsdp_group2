@@ -51,8 +51,8 @@ const TestCaseManagement = () => {
       <Sidebar />
       <div className='testCaseManagement-container'>
         <Navbar />
-        {/* Pass the fetched summary data to the TestCaseSummary component */}
-        <TestCaseSummary summaryData={summaryData} />
+        {/* Pass the fetched summary data to the TestCaseSummary component
+        <TestCaseSummary summaryData={summaryData} /> */}
         {/* Recent Activity Component */}
         <RecentActivity />
       </div>

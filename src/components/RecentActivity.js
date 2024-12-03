@@ -17,12 +17,61 @@ const RecentActivity = () => {
 
   // Fetch recent activities from the backend when the component mounts
   useEffect(() => {
+    function generateUniqueId() {
+      const generatedIds = new Set();
+      let uniqueId;
+      
+      do {
+          uniqueId = Math.floor(1000 + Math.random() * 9000); 
+      } while (generatedIds.has(uniqueId));
+      
+      generatedIds.add(uniqueId);
+      
+      return uniqueId;
+    }
+    const transformToSimpleArray = (data) => {
+      const transformed = [];
+    
+      ['chrome', 'edge', 'firefox'].forEach((browser) => {
+        if (data[browser]) {  // Check if the browser data exists
+          data[browser].forEach((testSuite) => {
+            testSuite.tests.forEach((test) => {
+              test.scenarios.forEach((scenario) => {
+                if (scenario.type !== "background") {
+                  const formattedDate = new Date(scenario.start_timestamp).toISOString().split('T')[0];
+    
+                  transformed.push({
+                    id: generateUniqueId(),
+                    name: `${test.name} - ${scenario.name}`,
+                    executedBy: "auto",
+                    browser: browser,
+                    date: formattedDate,
+                    result: scenario.status === "passed" ? "Passed" : "Failed",
+                  });
+                }
+              });
+            });
+          });
+        }
+      });
+      return transformed;
+    };
     const fetchRecentActivities = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/recent-activity'); // Replace with your backend URL
+        const response = await fetch('http://localhost:5000/api/get-test-results', {
+          method: 'POST',
+          headers: {
+            'Content-Type' : 'application/json',
+          },
+          body: JSON.stringify({
+            dbName: "PointPulseHR",
+            browsers: ["Chrome", "Edge", "Firefox"]
+          }),
+        }); // Replace with your backend URL
         const data = await response.json();
-        setRecentActivities(data); // Set the fetched data
-        setFilteredActivities(data); // Initially, set all data as filtered
+        const transformedData = transformToSimpleArray(data);
+        setRecentActivities(transformedData); // Set the fetched data
+        setFilteredActivities(transformedData); // Initially, set all data as filtered
       } catch (error) {
         console.error('Failed to fetch recent activities:', error);
       }
@@ -188,6 +237,7 @@ const RecentActivity = () => {
             <th>ID</th>
             <th>Test Case Name</th>
             <th>Executed By</th>
+            <th>Browser</th>
             <th>Date</th>
             <th>Result</th>
             <th>Action</th>
@@ -195,10 +245,11 @@ const RecentActivity = () => {
         </thead>
         <tbody>
           {currentItems.map((item) => (
-            <tr key={item.id}>
+            <tr key={`${item.id}-${item.name}`}>
               <td>{item.id}</td>
               <td>{item.name}</td>
               <td>{item.executedBy}</td>
+              <td>{item.browser}</td>
               <td>{item.date}</td>
               <td>
                 <span className={`result-badge ${item.result === 'Passed' ? 'pass' : 'fail'}`}>
