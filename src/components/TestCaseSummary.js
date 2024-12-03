@@ -52,11 +52,11 @@ const TestCaseSummary = ({ summaryData }) => {
                 </div>
                 <div className="card-right">
                 <h3 style={{fontSize:'14px', color:'#ACACAC', fontWeight:'400'}}>Passed</h3>
-                <p style={{ fontSize:'32px', color:'#333'}}>{currentMonth.passed}</p>
+                <p style={{ fontSize:'32px', color:'#333'}}>{currentMonth.passed.length}</p>
                 <div>
-                        <span style={{fontSize:'11px'}} className={`percentage ${getPercentageColor(calculatePercentageChange(currentMonth.passed, lastMonth.passed))}`}>
-                            <b>{currentMonth.passed > lastMonth.passed ? '↑ ' : '↓ '} </b>
-                            {calculatePercentageChange(currentMonth.passed, lastMonth.passed).toFixed(2)}%{' '} 
+                        <span style={{fontSize:'11px'}} className={`percentage ${getPercentageColor(calculatePercentageChange(currentMonth.passed.length, lastMonth.passed.length))}`}>
+                            <b>{currentMonth.passed.length > lastMonth.passed.length ? '↑ ' : '↓ '} </b>
+                            {calculatePercentageChange(currentMonth.passed.length, lastMonth.passed.length).toFixed(2)}%{' '} 
                         </span>
                         <span style={{color:'#292d32', fontSize:'11px'}}> this month</span>
                 </div>
@@ -70,11 +70,11 @@ const TestCaseSummary = ({ summaryData }) => {
                 </div>
                 <div className="card-right">
                     <h3 style={{fontSize:'14px', color:'#ACACAC', fontWeight:'400'}}>Failed</h3>
-                    <p style={{ fontSize:'32px', color:'#333'}}>{currentMonth.failed}</p>
+                    <p style={{ fontSize:'32px', color:'#333'}}>{currentMonth.failed.length}</p>
                     <div>
-                        <span  style={{fontSize:'11px'}} className={`percentage ${getPercentageColor(calculatePercentageChange(currentMonth.failed, lastMonth.failed))}`}>
-                            <b>{currentMonth.failed > lastMonth.failed ? '↑ ' : '↓ '}</b>
-                            {calculatePercentageChange(currentMonth.failed, lastMonth.failed).toFixed(2)}%{' '}
+                        <span  style={{fontSize:'11px'}} className={`percentage ${getPercentageColor(calculatePercentageChange(currentMonth.failed.length, lastMonth.failed.length))}`}>
+                            <b>{currentMonth.failed.length > lastMonth.failed.length ? '↑ ' : '↓ '}</b>
+                            {calculatePercentageChange(currentMonth.failed.length, lastMonth.failed.length).toFixed(2)}%{' '}
                         </span>
                         <span style={{color:'#292d32', fontSize:'11px'}}> this month</span>
                     </div>
