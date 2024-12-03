@@ -4,6 +4,7 @@ const parseTestResult = require("../utils/parseTestResult");
 
 const getAllResults = async (req, res) => {
     try {
+        console.log(req.body);
         const dbConnection = getDBConnection(req.body.dbName);
 
         let result = {};
@@ -34,17 +35,20 @@ const addResult = async (req, res) => {
         const dbName = req.body.dbName;
 
         const dbConnection = getDBConnection(dbName);
-        const model = dbConnection.model(`test_results_${browser}`, testResultSchema, `test_results_${browser}`);
+        const model = dbConnection.model(
+            `test_results_${browser}`,
+            testResultSchema,
+            `test_results_${browser}`
+        );
         const parsedJSON = parseTestResult(req.body.result);
         const newTestResult = new model(parsedJSON);
-        await newTestResult.save();  
+        await newTestResult.save();
 
         res.status(200).send("Added test results successfully");
-    }
-    catch (err) {
+    } catch (err) {
         console.error(err);
         res.status(400).send("Error adding test results");
     }
-}
+};
 
 module.exports = { getAllResults, addResult };
