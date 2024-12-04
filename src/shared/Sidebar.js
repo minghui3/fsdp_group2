@@ -1,7 +1,7 @@
 // Sidebar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaTachometerAlt, FaTasks, FaQuestionCircle, FaChevronRight } from 'react-icons/fa'; // Font Awesome Icons
+import { FaPlus, FaTachometerAlt, FaTasks, FaQuestionCircle, FaChevronRight } from 'react-icons/fa'; // Font Awesome Icons
 import logo from '../logo.png'; // Update the logo path if needed
 
 const Sidebar = () => {
@@ -29,6 +29,14 @@ const Sidebar = () => {
           </Link>
         </li>
 
+        <li className="nav-item">
+          <Link className="nav-link" to="/add-project">
+            <FaTasks className="sidebar-icon" />
+            <span className="menu-title">Add Project</span>
+            <FaChevronRight className="icon-right" /> {/* Right arrow */}
+          </Link>
+        </li>
+		      
         {/* Help */}
         <li className="nav-item">
           <Link className="nav-link" to="/help">

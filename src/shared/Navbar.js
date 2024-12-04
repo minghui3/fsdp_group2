@@ -27,6 +27,7 @@ const Navbar = () => {
     '/help': 'Help',
     '/dashboard/profile': 'Profile',
     '/dashboard/settings': 'Settings',
+    '/add-project': 'Add Project',
   };
 
   // Set the title based on current path

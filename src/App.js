@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import TestCaseManagement from './pages/TestCaseManagement';
+import AddProject from './pages/AddProject';
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path='/test-case-management' element={<TestCaseManagement />} />
+        <Route path="/add-project" element={<AddProject />} />
       </Routes>
     </Router>
   );
