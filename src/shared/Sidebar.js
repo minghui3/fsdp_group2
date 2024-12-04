@@ -31,7 +31,7 @@ const Sidebar = () => {
 
         <li className="nav-item">
           <Link className="nav-link" to="/add-project">
-            <FaTasks className="sidebar-icon" />
+            <FaPlus className="sidebar-icon" />
             <span className="menu-title">Add Project</span>
             <FaChevronRight className="icon-right" /> {/* Right arrow */}
           </Link>
