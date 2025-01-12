@@ -9,7 +9,6 @@ const AddProject = () => {
     // 2. Add remove button
     // 3. Add pop up message to show success/failure
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const fileInput = document.getElementById('file');
@@ -60,7 +59,16 @@ const AddProject = () => {
                         <label for="env">Environment Variables</label>
                         <textarea id="env" style={{ height: "300px", resize: "none" }}></textarea>
                     </div>
+<<<<<<< HEAD
                     <button type="button" style={{ margin: "20px auto 0", width: "fit-content", padding: "0.5rem 2rem", fontWeight: "Bold" }}>Add</button>
+=======
+                    <button type="button" style={{margin: "20px auto 0", width: "fit-content", padding: "0.5rem 2rem", fontWeight: "Bold" }}>Add</button>
+                </form>
+                <form action="http://localhost:5000/api/test-case/add" method="post" encType="multipart/form-data" >
+                    <label for="file">Test Cases</label>
+                    <input type="file" id="file" name="file" multiple accept=".feature, .java"></input>
+                    <button type="submit">Submit</button>
+>>>>>>> 957d371 (upload test cases)
                 </form>
                 <form action="http://localhost:5000/api/test-case/add" method="post" encType="multipart/form-data" >
                     <label for="file">Test Cases</label>
