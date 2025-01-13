@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const { closeDBConnections } = require("./database/db");
 const dashboardController = require("./controllers/dashboardController");
 const testResultController = require("./controllers/testResultController");
@@ -12,6 +13,8 @@ const app = express();
 
 app.use(cors()); // Enable Cross-Origin Requests
 app.use(express.json()); // Enable JSON parsing in requests
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended : true}));
 app.use("/", userRouter);
 app.use("/api", testResultRouter);
 
