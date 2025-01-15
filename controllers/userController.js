@@ -1,6 +1,9 @@
+require('dotenv').config();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const getUser = async (req, res) => {
+const jwt = require("jsonwebtoken");
+const SECRET_KEY = process.env.SECRET_KEY;
+const getUserByEmail = async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -18,8 +21,13 @@ const getUser = async (req, res) => {
         if (!isMatch){
             return res.status(404).send("Incorrect credentials");
         }
+        const token = jwt.sign({
+            id: result._id,
+            email: result.email,
+            name: result.name,
+        }, SECRET_KEY,{expiresIn: "4h"} );
         const {password:_, ...userDetails} = result.toObject();
-        res.status(200).json(userDetails);
+        res.status(200).json(token);
     } catch (err) {
         console.error(err);
         res.status(400).send(`Error getting user with email: ${email}`);
@@ -39,8 +47,20 @@ const addUser = async (req, res) => {
         res.status(400).send(`Error adding new user`);
     } 
 };
+//dummy method for Authentication component to use.
+const verifyUser = async(req, res) =>{
+    res.status(200).json({
+        message: "Valid token",
+        user: {
+            id: req.user.id,
+            name: req.user.name,
+            email: req.user.email,
+        }
+    });
+}
 
 module.exports = {
-    getUser,
+    getUserByEmail,
     addUser,
+    verifyUser,
 };
