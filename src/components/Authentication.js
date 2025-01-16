@@ -24,6 +24,7 @@ const Authentication = ({ children }) => {
                 }
             } catch (err) {
                 console.error("Token authentication failed", err);
+                setIsAuthenticated(false);
             }
         };
 
