@@ -1,7 +1,4 @@
 const mongoose = require("mongoose");
-const { getDBConnection } = require("../database/db");
-
-const dbConnection = getDBConnection("TestBridge"); 
 
 const testCaseSchema = new mongoose.Schema({
 
@@ -41,7 +38,7 @@ const testCaseSchema = new mongoose.Schema({
     },
 });
 
-module.exports = dbConnection.model("TestCase", testCaseSchema);
+module.exports = testCaseSchema;
 
 
 
