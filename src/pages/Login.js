@@ -23,7 +23,7 @@ const Login = () => {
 
       // If login is successful, navigate to the dashboard
       if (response.status === 200) {
-        localStorage.setItem("user", JSON.stringify(response));
+        localStorage.setItem("usertoken", JSON.stringify(response.data));
         navigate('/dashboard');
       }
 
