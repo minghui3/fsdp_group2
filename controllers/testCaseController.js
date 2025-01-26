@@ -3,20 +3,59 @@ const fsPromises = fs.promises;
 const { v4: uuidv4 } = require("uuid");
 const simpleGit = require("simple-git");
 
+const move = require("../utils/move");
 const testCaseSchema = require("../models/testCase");
 const { getDBConnection } = require("../database/db");
 
+const FilePath = {
+    "java": "src/test/java/stepdefinitions",
+    "feature": "src/test/resources/features",
+};
+
+const checkFileExists = (projectDir, name) => {
+    var path = `${projectDir}/`;
+
+    if (name.endsWith(".java")) {
+        path += `${FilePath.java}/${name}`;
+    } else if (name.endsWith(".feature")) {
+        path += `${FilePath.feature}/${name}`;
+    } 
+    console.log("Checking path", path); 
+    return fs.existsSync(path);
+}
+
 const addTestCase = async (req, res) => {
     try {
-        const files = req.files;
-
-        if (files.length === 0) {
+        if (req.files.length === 0) {
             res.status(204).send("No files received");
+        } 
+
+        const projectName = req.projectName || "test-cases";
+        const projectDir = `./repos/${projectName}`;
+        var files = [];
+        
+        if (req.override) {
+            files = req.files;    
+        } else {
+            const dupes = [];
+            req.files.forEach(f => {
+                if (checkFileExists(projectDir, f.originalname)) {
+                    dupes.push(f);
+                } else {
+                    files.push(f);
+                }
+            });
+
+            if (dupes.length !== 0) {
+                res.status(400).json({
+                    message: `There are duplicate files.`,
+                    files: dupes,
+                });
+                return;
+            }
         }
 
-        const repoUrl = req.body.repoUrl || "https://github.com/minghui3/test-cases.git";
-        const dbname = req.body.dbname || "PulsePointHR";
-        const dbConnection = getDBConnection(dbname);
+        const dbConnection = getDBConnection(projectName);
         const TestCase = dbConnection.model("TestCase", testCaseSchema);
         const modelArr = [];
 
@@ -25,9 +64,10 @@ const addTestCase = async (req, res) => {
 
         // Process each feature file
         await Promise.all(
-            files
-                .filter(a => a.originalname.endsWith(".feature"))
-                .map(async (f) => {
+            files.map(async (f) => {
+
+                // if is feature file, add uuid, find tags, add to db 
+                if (f.originalname.endsWith(".feature")) {
                     const content = await fsPromises.readFile(f.path, 'utf8');
                     const updatedContent = content.replace(regex, (match, tags, scenario) => {
                         tags = tags ? tags.trim() : "";
@@ -35,6 +75,7 @@ const addTestCase = async (req, res) => {
                         const spaces = 4;
 
                         const uuid = uuidv4();
+                        // replace with regex?
                         const name = scenario.replace("Scenario: ", "");
                         const file = f.originalname;
                         const tagArr = tags.split(" ").filter(t => t.startsWith("@"));
@@ -50,19 +91,30 @@ const addTestCase = async (req, res) => {
 
                         // Tag each scenario with an id
                         return [
-                            `\n${" ".repeat(spaces) + "@" + uuid}`,
+                            `\n\n${" ".repeat(spaces) + "@" + uuid}`,
                             `${" ".repeat(spaces) + match.trim()}`
                         ].join("\n");
                     });
 
-                    // update file contents
-                    await fsPromises.writeFile('./uploads/' + f.originalname, updatedContent);
-                })
+                    await fsPromises.writeFile(f.path, updatedContent);
+
+                    // move file contents to local copy of repo
+                    await move(f.path, `${projectDir}/src/test/resources/features/${f.originalname}`);
+                } else if (f.originalname.endsWith(".java")) {
+                    await move(f.path, `${projectDir}/src/test/java/stepdefinitions/${f.originalname}`);
+                }
+            })
         );
 
         TestCase.bulkSave(modelArr);
 
         // TODO:
+        // clone repo when this project is chosen
+        // when switch, delete dir and clone new repo
+        // when submit, check if file exists
+        // prompt user to override/cancel (checkbox for "Apply for all"?)
+        //
+        //
         // 1. These shouldn't be hardcoded
         // 2. Handle files overriden by checkout
         // 3. Organise files properly
@@ -71,22 +123,20 @@ const addTestCase = async (req, res) => {
         // 6. Handle multiple file submissions at once
 
 
-        const uploads = simpleGit("./uploads");
+        const uploads = simpleGit(projectDir);
         await uploads
-            .init()
-            .addRemote("origin", repoUrl)
             .fetch("origin")
-            .checkout("expensivehippo")
+            .checkout("test")
             .add("*")
             .commit(`Add ${files.length} files`)
-            .push("origin", "HEAD:refs/heads/expensivehippo");
+            .push("origin", "HEAD:refs/heads/test");
 
         res.status(200).send("Added test cases successfully");
     } catch (err) {
         console.error(err);
         res.status(400).send("Error adding test results");
     } finally {
-        await fsPromises.rm("./uploads", { recursive: true });
+        await fsPromises.rm(req.dest, { recursive: true });
     }
 };
 

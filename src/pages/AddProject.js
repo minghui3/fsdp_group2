@@ -34,7 +34,8 @@ const AddProject = () => {
         });
 
         if (!response.ok) {
-            console.log("BAD");
+            const result = await response.json();
+            console.log(result);
         }
     }
 

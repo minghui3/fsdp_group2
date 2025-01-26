@@ -20,7 +20,7 @@ const TestCaseManagement = () => {
   useEffect(() => {
     const fetchSummaryData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/test-case-summary'); // Backend URL
+        const response = await fetch('http://localhost:5000/api/get-test-results'); // Backend URL
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

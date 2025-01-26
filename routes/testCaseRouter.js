@@ -1,14 +1,19 @@
 const express = require("express");
 const multer = require("multer");
+const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const controller = require("../controllers/testCaseController");
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        if (!fs.existsSync("./uploads")) {
-            fs.mkdirSync("./uploads");
+        if (!req.dest) {
+            req.dest = `./uploads/${uuidv4()}` 
+            if (!fs.existsSync(req.dest)) {
+                fs.mkdirSync(req.dest, { recursive: true });
+            }
+            
         }
-        cb(null, "./uploads");
+        cb(null, req.dest);
     },
     filename: function(req, file, cb) {
         cb(null, file.originalname);
