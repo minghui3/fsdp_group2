@@ -1,7 +1,4 @@
 const mongoose = require("mongoose");
-const { getDBConnection } = require("../database/db");
-
-const dbConnection = getDBConnection("TestBridge"); 
 
 const testCaseSchema = new mongoose.Schema({
 
@@ -42,10 +39,14 @@ const testCaseSchema = new mongoose.Schema({
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 module.exports = testCaseSchema;
 =======
 module.exports = dbConnection.model("TestCase", testCaseSchema);
 >>>>>>> 957d371 (upload test cases)
+=======
+module.exports = testCaseSchema;
+>>>>>>> 9867580 (add basic file upload)
 
 
 
