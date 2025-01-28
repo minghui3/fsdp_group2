@@ -6,24 +6,27 @@ const fsPromises = require("fs").promises;
     try {
         const repoArr = await Repo.find({});
         console.log(repoArr);
-
+        
+        try {
+            await fsPromises.access("./repos");
+        }
+        catch {
+            await fsPromises.mkdir("./repos")
+        }
         const reposDir = simpleGit(("./repos")); 
 
         repoArr.forEach(async(r) => {
-            const exists = await fsPromises.access(`./repos/${r.name}`);
-            if (!exists) {
-                console.log(`[repo.js] Repo ${r.name} does not exist. Cloning ${r.url}...`);
+            try {
+                await fsPromises.access(`./repos/${r.name}`);
+            }
+            catch {
                 await reposDir.clone(r.url);
-            } else {
-                console.log(`[repo.js] Repo ${r.name} exists.`)
             }
         });
+        process.exit(0);
     }
     catch (err) {
         console.error(err);
-        process.exit(1);
-    }
-    finally {
-        process.exit(0);
+        throw (err);
     }
 })();

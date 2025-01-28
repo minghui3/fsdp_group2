@@ -32,7 +32,9 @@ const initRepos = async () => {
 
 const startServer = async () => {
     try {
+        console.log("start");
         await runAndStream("node", ["server.js"]);
+        console.log("end");
     }
     catch (err) {
         console.error("Error starting server: ", err);
