@@ -28,9 +28,11 @@ const AddProject = () => {
             formData.append("file", f);
         }
 
+        formData.append("projectName", "test-cases")
+
         const response = await fetch(url, {
             method: 'POST',
-            body: formData
+            body: formData,
         });
 
         if (!response.ok) {

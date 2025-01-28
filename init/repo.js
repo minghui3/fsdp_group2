@@ -1,9 +1,8 @@
 const Repo = require("../models/repo.js");
 const simpleGit = require("simple-git");
-const fs = require("fs");
-const Queue = require("bull"); 
+const fsPromises = require("fs").promises;
 
-const initRepos = (async() => {
+(async() => {
     try {
         const repoArr = await Repo.find({});
         console.log(repoArr);
@@ -11,7 +10,8 @@ const initRepos = (async() => {
         const reposDir = simpleGit(("./repos")); 
 
         repoArr.forEach(async(r) => {
-            if (!fs.existsSync("./repos/" + r.name)) {
+            const exists = await fsPromises.access(`./repos/${r.name}`);
+            if (!exists) {
                 console.log(`[repo.js] Repo ${r.name} does not exist. Cloning ${r.url}...`);
                 await reposDir.clone(r.url);
             } else {
@@ -21,5 +21,9 @@ const initRepos = (async() => {
     }
     catch (err) {
         console.error(err);
+        process.exit(1);
+    }
+    finally {
+        process.exit(0);
     }
 })();

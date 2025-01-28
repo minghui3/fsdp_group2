@@ -2,11 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { closeDBConnections } = require("./database/db");
+const { run } = require("./utils/run");
 const userRouter = require("./routes/userRouter");
 const testResultRouter = require("./routes/testResultRouter");
 const testCaseRouter = require("./routes/testCaseRouter");
 const port = 5000;
-
 const app = express();
 
 app.use(cors()); // Enable Cross-Origin Requests
@@ -22,7 +22,15 @@ app.listen(port, () => {
 });
 
 process.on("SIGINT", async () => {
-    closeDBConnections();    
-    console.log("[server.js] Shutting server down...");
-    process.exit(0);
+    try {
+        closeDBConnections();    
+        console.log("Shutting server down..."); 
+        await run("docker", "stop redis-container".split(" "));
+        console.log("Stopping docker container...");
+        process.exit(0);
+    }
+    catch (err) {
+        console.error("Did not gracefully shut down: ", err);
+        process.exit(1);
+    }
 });
