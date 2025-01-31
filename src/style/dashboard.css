@@ -1,0 +1,190 @@
+/* Container for the dashboard layout */
+
+
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh; /* Full height of the viewport */
+  }
+  
+  /* Sidebar - fixed width, occupying the left */
+  .sidebar {
+    width: 300px; /* Adjust this based on how wide you want your sidebar */
+    color: #333;
+    height: 100%; /* Full height */
+    position: fixed; /* Keeps it fixed when scrolling */
+    top: 0;
+    left: 0;
+    padding: 40px 25px;
+    box-sizing: border-box;
+    box-shadow: 0px 8px 12px rgba(226, 236, 249, 0.5); /* Drop shadow on the Y-axis only */
+    background-color: #fff;
+  }
+
+  .sidebar img {
+    width: 240px;
+    height: auto;
+  }
+
+
+  .sidebar ul {
+    list-style: none;
+    padding: 0; /* Removes default padding */
+    margin: 0; /* Removes default margin */
+  }
+
+  /* Style for list items */
+.sidebar ul li {
+    margin-bottom: 20px; /* Adds space between items */
+  }
+  
+  /* Style for links in the list items */
+  .sidebar ul li a {
+    text-decoration: none; /* Removes underline */
+    color: #9197b3; /* Set your desired color */
+    font-size: 14px;
+    display: flex; /* Allows icon and text to align horizontally */
+    align-items: center;
+    padding: 15px;
+    border-radius: 10px;
+  }
+  
+  .sidebar ul li a:hover {
+    background-color: #e1251b; /* Color on hover, optional */
+    color: #fff;
+  }
+
+  /* Change the icon border and color when the entire button is hovered */
+  .sidebar ul li a:hover .sidebar-icon {
+    border-color: #fff; /* Changes icon border color on hover */
+    color: #fff; /* Change icon color on hover */
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
+
+  .nav-icon {
+    display: flex;
+    align-items: center;
+  }
+
+  .sidebar-icon {
+    padding: 4px;
+    border: 1.5px solid #9197b3;
+    border-radius: 7px;
+    margin-right: 10px;
+  }
+
+
+/* Style for arrow on the right */
+.icon-right {
+    margin-left: auto; /* Push arrow to the far right */
+  }
+  
+  /* Main content area - takes the remaining space */
+  .dashboard-content {
+    margin-left: 300px; /* This pushes the main content to the right of the sidebar */
+    flex-grow: 1; /* Take up remaining space */
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 30px;
+    background-color: #f9f9f9; /* Main content background */
+  }
+  
+  /* Optional: Navbar inside main content */
+  .navbar {
+    background-color: #fff;
+    padding: 30px;
+    color: #000;
+    text-align: center;
+  }
+  
+  .content {
+    margin-top: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  
+  /* General container for each row with fixed height */
+.chart-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 400px; /* Set a consistent fixed height for all rows */
+  gap: 20px; /* Space between charts */
+  box-sizing: border-box;
+  padding: 0 30px;
+}
+
+/* Ensures each container stretches to full height of the row */
+.doughnut-container, 
+.linegraph-container, 
+.auto-coverage-container, 
+.test-run-container, 
+.top-failing-tests-container, 
+.browser-coverage-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Full height of the row */
+  width: 100%; /* Full width according to flex */
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 10px; /* Optional: internal padding */
+  box-sizing: border-box;
+}
+
+/* Specific flex ratios for each row */
+.chart-row:first-child .doughnut-container {
+  flex: 1;
+}
+.chart-row:first-child .linegraph-container {
+  flex: 2;
+}
+
+.chart-row:nth-child(2) .auto-coverage-container {
+  flex: 2;
+}
+.chart-row:nth-child(2) .test-run-container {
+  flex: 1;
+}
+
+.chart-row:nth-child(3) .top-failing-tests-container {
+  flex: 2;
+}
+.chart-row:nth-child(3) .browser-coverage-container {
+  flex: 1;
+}
+
+/* Ensure canvas elements take up full space within their containers */
+
+.linegraph-container canvas,
+.auto-coverage-container canvas,
+.test-run-container canvas,
+.top-failing-tests-container canvas,
+.browser-coverage-container canvas {
+  height: 100% !important; /* Stretch to full container height */
+  width: 100% !important;  /* Stretch to full container width */
+}
+
+
+  @media (max-width: 768px) {
+    .chart-row {
+      flex-direction: column;
+    }
+  
+    .doughnut-container,
+    .linegraph-container,
+    .auto-coverage-container,
+    .test-run-container,
+    .top-failing-tests-container,
+    .browser-coverage-container {
+      min-height: 250px; /* Adjust height for smaller screens */
+      margin-bottom: 20px; /* Add spacing between charts */
+    }
+  }
