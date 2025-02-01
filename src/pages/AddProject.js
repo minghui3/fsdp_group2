@@ -28,13 +28,17 @@ const AddProject = () => {
             formData.append("file", f);
         }
 
+        formData.append("projectName", "test-cases")
+        formData.append("userId", localStorage.getItem("userId"));
+
         const response = await fetch(url, {
             method: 'POST',
-            body: formData
+            body: formData,
         });
 
         if (!response.ok) {
-            console.log("BAD");
+            const result = await response.json();
+            console.log(result);
         }
     }
 
