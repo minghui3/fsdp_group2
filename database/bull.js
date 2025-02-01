@@ -21,6 +21,12 @@ const getQueue = (projectName) => {
             },
         });
 
+        queue.on("error", async (err) => {
+            const a = await queue.getJobCounts();
+            console.log(a);
+            console.error(err);
+        });
+
         queue.process(processSubmission);
 
         queue.on("completed", async (job) => {
@@ -51,4 +57,15 @@ const getQueue = (projectName) => {
     return projectQueue.get(projectName);
 }
 
-module.exports = getQueue;
+const closeQueues = async () => {
+    console.log("[bull.js] Closing queues");
+    try {
+
+        await Promise.all(Object.values(projectQueue).map(queue => queue.close()));
+    } catch (err) {
+        console.log(`bluh`);
+        console.error(err);
+    }
+}
+
+module.exports = { getQueue, closeQueues };

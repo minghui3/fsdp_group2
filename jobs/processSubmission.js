@@ -1,3 +1,4 @@
+const getWebSocket = require("../websocket");
 const { v4: uuidv4 } = require("uuid");
 const simpleGit = require("simple-git");
 const fsPromises = require("fs").promises;
@@ -13,7 +14,7 @@ const FilePath = {
 
 const processSubmission = async (job) => {
 
-    const { projectName, files, override } = job.data;    
+    const { userId, projectName, files, override } = job.data;
 
     const logPrefix = `[ ${projectName} | JOB ${job.id} ]`
 
@@ -25,6 +26,8 @@ const processSubmission = async (job) => {
 
         if (uncool.length !== 0) {
             console.log(`${logPrefix} FOUND DUPLICATE FILES`);
+            await alertUser(userId, uncool);
+            return;
         }
 
         const dbConnection = getDBConnection(projectName);
@@ -37,7 +40,7 @@ const processSubmission = async (job) => {
             if (name.endsWith(".feature")) {
                 const modelArr = await processFeatureFile(file);
                 models.push(...modelArr);
-            } 
+            }
 
             await moveFile(file, projectName);
         }));
@@ -58,9 +61,23 @@ const processSubmission = async (job) => {
     }
 }
 
+const alertUser = async (userId, files) => {
+    try {
+        const ws = getWebSocket(userId);
+        ws.send(JSON.stringify({
+            event: 'duplicate',
+            message: "There are duplicate files.",
+            files,
+        }));
+    }
+    catch (err) {
+        console.error("Error while alerting user");
+        throw err;
+    }
+}
 
 const processFeatureFile = async (file) => {
-    const SCENARIO_REGEX = /(^\s*@.*\s*)*(^\s*Scenario:\s*.+$)/gm; 
+    const SCENARIO_REGEX = /(^\s*@.*\s*)*(^\s*Scenario:\s*.+$)/gm;
     const spaces = 4;
     const modelArr = [];
 
@@ -94,9 +111,10 @@ const processFeatureFile = async (file) => {
 
         await fsPromises.writeFile(file.path, updatedContent);
         return modelArr;
-    } 
+    }
     catch (err) {
         console.error(err);
+        throw err;
     }
 }
 
@@ -108,7 +126,7 @@ const checkFileExists = async (projectDir, name) => {
         path += `${FilePath.java}/${name}`;
     } else if (name.endsWith(".feature")) {
         path += `${FilePath.feature}/${name}`;
-    } 
+    }
 
     return fsPromises.access(path)
         .then(() => true)
@@ -150,7 +168,7 @@ const moveFile = async (file, projectName) => {
         dest += `${FilePath.java}/${name}`;
     } else if (name.endsWith(".feature")) {
         dest += `${FilePath.feature}/${name}`;
-    } 
+    }
 
     await move(file.path, dest);
 }
@@ -158,15 +176,16 @@ const moveFile = async (file, projectName) => {
 const commitAndPush = async (projectPath, fileCount) => {
     try {
         const git = simpleGit(projectPath);
-        await git 
+        await git
             .fetch("origin")
             .checkout("test")
             .add("*")
             .commit(`Add ${fileCount} files`)
             .push("origin", "HEAD:refs/heads/test");
-    } 
+    }
     catch (err) {
         console.error(err);
+        throw err;
     }
 }
 

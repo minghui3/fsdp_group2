@@ -55,8 +55,6 @@ const Dashboard = () => {
 
         return acc;
     }, {});
-	
-	console.log("SKIBIDI" + JSON.stringify(resultCount))
 
     const failData = Object.keys(dashboardData).reduce((acc, browser) => {
         acc[browser] = dashboardData[browser][0].tests.reduce((accc, test) => {
@@ -67,7 +65,6 @@ const Dashboard = () => {
             );
             return accc;
         }, []);
-        console.log(acc);
         return acc;
     }, {});
 
@@ -88,39 +85,39 @@ const Dashboard = () => {
     const lastMonth = moment().subtract(1, "months").month();
 
     // TODO: Account for other years
-	const currentMonthActivities = Object.keys(dashboardData).reduce(
-		(acc, browser) => {
-			return acc.concat(
-				dashboardData[browser][0].tests.reduce((accc, test) => {
-					return accc.concat(
-						test.scenarios.filter(
-							(i) =>	
-								i.type !== "background" &&
-								moment(test.start_timestamp).month() === currentMonth
-						)
-					);
-				}, []) // Properly initialize accc as an empty array
-			);
-		},
-		[] // Properly initialize acc as an empty array
-	);
+    const currentMonthActivities = Object.keys(dashboardData).reduce(
+        (acc, browser) => {
+            return acc.concat(
+                dashboardData[browser][0].tests.reduce((accc, test) => {
+                    return accc.concat(
+                        test.scenarios.filter(
+                            (i) =>
+                                i.type !== "background" &&
+                                moment(test.start_timestamp).month() === currentMonth
+                        )
+                    );
+                }, []) // Properly initialize accc as an empty array
+            );
+        },
+        [] // Properly initialize acc as an empty array
+    );
 
-	const lastMonthActivities = Object.keys(dashboardData).reduce(
-		(acc, browser) => {
-			return acc.concat(
-				dashboardData[browser][0].tests.reduce((accc, test) => {
-					return accc.concat(
-						test.scenarios.filter(
-							(i) =>
-								i.type !== "background" &&
-								moment(test.start_timestamp).month() === lastMonth
-						)
-					);
-				}, []) // Properly initialize accc as an empty array
-			);
-		},
-		[] // Properly initialize acc as an empty array
-	);
+    const lastMonthActivities = Object.keys(dashboardData).reduce(
+        (acc, browser) => {
+            return acc.concat(
+                dashboardData[browser][0].tests.reduce((accc, test) => {
+                    return accc.concat(
+                        test.scenarios.filter(
+                            (i) =>
+                                i.type !== "background" &&
+                                moment(test.start_timestamp).month() === lastMonth
+                        )
+                    );
+                }, []) // Properly initialize accc as an empty array
+            );
+        },
+        [] // Properly initialize acc as an empty array
+    );
 
     const testCaseData = {
         totalTestCase: {
@@ -140,7 +137,7 @@ const Dashboard = () => {
         },
     };
 
-	console.log(testCaseData)
+    console.log(testCaseData)
 
     return (
         <div className="dashboard-layout">

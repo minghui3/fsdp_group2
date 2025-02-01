@@ -29,6 +29,7 @@ const AddProject = () => {
         }
 
         formData.append("projectName", "test-cases")
+        formData.append("userId", localStorage.getItem("userId"));
 
         const response = await fetch(url, {
             method: 'POST',

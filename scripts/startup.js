@@ -10,7 +10,7 @@ const runRedis = async () => {
             if (redisExists) {
                 await run("docker", "start redis-container".split(" "))
             } else {
-                await run("docker", "run -d --name redis-container -p 6739:6739 fsdp:redis".split(" "));
+                await run("docker", "run -d --name redis-container -p 6379:6379 fsdp:redis".split(" "));
             }
         }
     }
@@ -22,7 +22,7 @@ const runRedis = async () => {
 
 const initRepos = async () => {
     try {
-        await run("node", ["./init/repo.js"]);
+        await runAndStream("node", ["./init/repo.js"]);
     }
     catch (err) {
         console.error("Error initialising repos: ", err);
@@ -32,12 +32,10 @@ const initRepos = async () => {
 
 const startServer = async () => {
     try {
-        console.log("start");
         await runAndStream("node", ["server.js"]);
-        console.log("end");
     }
     catch (err) {
-        console.error("Error starting server: ", err);
+        console.error("Error starting express server: ", err);
         throw err;
     }
 }
