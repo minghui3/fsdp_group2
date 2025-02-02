@@ -1,87 +1,122 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Sidebar from "../shared/Sidebar";
 import Navbar from "../shared/Navbar";
 import "../style/settings.css";
-import { sendNotification } from '../components/NotificationService';
 
 const Settings = () => {
-  const [slackNotifications, setSlackNotifications] = useState(false);
-  const [emailAlertType, setEmailAlertType] = useState("always");
-  const [telegramNotifications, setTelegramNotifications] = useState(false);
-  const [pushNotifications, setPushNotifications] = useState(false);
+    
+  // Initial state values based on localStorage
+  const [slackNotifications, setSlackNotifications] = useState(
+    JSON.parse(localStorage.getItem("slackNotifications")) || false
+  );
+  const [telegramNotifications, setTelegramNotifications] = useState(
+    JSON.parse(localStorage.getItem("telegramNotifications")) || false
+  );
+  const [pushNotifications, setPushNotifications] = useState(
+    JSON.parse(localStorage.getItem("pushNotifications")) || false
+  );
+  const [smsNotifications, setSmsNotifications] = useState(
+    JSON.parse(localStorage.getItem("smsNotifications")) || false
+  );
+  const [phoneCallNotifications, setPhoneCallNotifications] = useState(
+    JSON.parse(localStorage.getItem("phoneCallNotifications")) || false
+  );
+  const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail") || "");
+  const [userTelegramChatId, setUserTelegramChatId] = useState(localStorage.getItem("userTelegramChatId") || "");
+  const [userFCMToken, setUserFCMToken] = useState(localStorage.getItem("userFCMToken") || "");
+  const [userPhoneNumber, setUserPhoneNumber] = useState(localStorage.getItem("userPhoneNumber") || "");
+  const [emailNotifications, setEmailNotifications] = useState(
+    JSON.parse(localStorage.getItem("emailNotifications")) || false
+  );
 
-  const [userEmail, setUserEmail] = useState("");
-  const [userTelegramChatId, setUserTelegramChatId] = useState("");
-  const [userFCMToken, setUserFCMToken] = useState("");  // For push notifications
+  const handleInputChange = (setter) => (e) => setter(e.target.value);
 
-  const handleEmailChange = (e) => {
-    setUserEmail(e.target.value);
-  };
+  // Save preferences to localStorage whenever any of the states change
+  useEffect(() => {
+    localStorage.setItem("slackNotifications", JSON.stringify(slackNotifications));
+    localStorage.setItem("telegramNotifications", JSON.stringify(telegramNotifications));
+    localStorage.setItem("phoneCallNotifications", JSON.stringify(phoneCallNotifications));
+    localStorage.setItem("userEmail", userEmail);
+    localStorage.setItem("userTelegramChatId", userTelegramChatId);
+    localStorage.setItem("userPhoneNumber", userPhoneNumber);
+    localStorage.setItem("emailNotifications", JSON.stringify(emailNotifications));
+  }, [
+    slackNotifications,
+    telegramNotifications,
+    phoneCallNotifications,
+    userEmail,
+    userTelegramChatId,
+    userPhoneNumber,
+    emailNotifications,
+  ]);
 
-  const handleTelegramChatIdChange = (e) => {
-    setUserTelegramChatId(e.target.value);
-  };
-
-  const handleFCMTokenChange = (e) => {
-    setUserFCMToken(e.target.value);
-  };
-
-  const saveEmailSettings = async () => {
+  const sendNotificationToServer = async (type) => {
     try {
-      const response = await fetch("http://localhost:5000/api/setUserEmail", {
+      let url = '';
+      let body = {};
+
+      // Determine the API endpoint and request body based on notification type
+      switch (type) {
+        case 'slack':
+          url = "http://localhost:5000/api/sendSlackNotification";
+          body = { message: "Test failed!" };
+          break;
+        case 'email':
+          url = "http://localhost:5000/api/sendEmailNotification";
+          body = { email: userEmail, message: "Test failed!" };
+          break;
+        case 'telegram':
+          url = "http://localhost:5000/api/sendTelegramNotification";
+          body = { chatId: userTelegramChatId, message: "Test failed!" };
+          break;
+        case 'call':
+          url = "http://localhost:5000/api/sendCallNotification";
+          body = { to: userPhoneNumber, message: "Test failed!" };
+          break;
+        default:
+          throw new Error("Invalid notification type");
+      }
+
+      // Make the POST request to the backend
+      const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: userEmail }),
-      });
-
-      const data = await response.json();
-      alert(data.message);
-    } catch (error) {
-      console.error("Error saving email:", error);
-    }
-  };
-
-  const sendNotificationToServer = async (notificationData) => {
-    try {
-      const response = await fetch("/api/sendNotification", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(notificationData),
+        body: JSON.stringify(body),
       });
 
       const result = await response.json();
-      console.log(result);
+      if (response.ok) {
+        alert(result.message); // Show the success message
+      } else {
+        console.error(result);
+        alert("Failed to send notification!");
+      }
     } catch (error) {
       console.error("Error sending notification:", error);
+      alert("An error occurred while sending the notification");
     }
   };
 
-  const handleSlackNotificationChange = () => {
-    setSlackNotifications(!slackNotifications);
-    if (slackNotifications) {
-      sendNotificationToServer({ type: "slack", message: "Test failed!" });
-    }
-  };
+  const handleSave = async () => {
+    try {
+      alert("Settings saved successfully!");
 
-  const handleTelegramNotificationChange = () => {
-    setTelegramNotifications(!telegramNotifications);
-    if (telegramNotifications && userTelegramChatId) {
-      sendNotificationToServer({
-        type: "telegram",
-        chatId: userTelegramChatId,
-        message: "Test failed!",
-      });
-    }
-  };
-
-  const handlePushNotificationChange = () => {
-    setPushNotifications(!pushNotifications);
-    if (pushNotifications && userFCMToken) {
-      sendNotificationToServer({
-        type: "push",
-        fcmToken: userFCMToken,
-        message: "Test failed!",
-      });
+      // Send notifications based on selected preferences
+      if (slackNotifications) {
+        await sendNotificationToServer("slack");
+      }
+      if (emailNotifications && userEmail) {
+        await sendNotificationToServer("email");
+      }
+      if (telegramNotifications && userTelegramChatId) {
+        await sendNotificationToServer("telegram");
+      }
+      if (phoneCallNotifications && userPhoneNumber) {
+        await sendNotificationToServer("call");
+      }
+    } catch (error) {
+      console.error("Error saving preferences:", error);
     }
   };
 
@@ -90,71 +125,161 @@ const Settings = () => {
       <Sidebar />
       <div style={{ marginLeft: "300px" }}>
         <Navbar />
-        <div className="settings-container" style={{ padding: "20px" }}>
-          <h2>Notification Settings</h2>
-          <div className="settings-section">
-            <label>
-              Slack Notifications
+        <div className="settings-container" style={containerStyle}>
+          <h2 style={headingStyle}>Notification Settings</h2>
+
+          {/* Slack Notifications */}
+          <div style={settingItemStyle}>
+            <div style={checkboxContainerStyle}>
               <input
                 type="checkbox"
                 checked={slackNotifications}
-                onChange={handleSlackNotificationChange}
+                onChange={() => setSlackNotifications(!slackNotifications)}
+                style={checkboxStyle}
               />
-            </label>
-
-            <div className="settings-section">
-              <label>Email for Notifications</label>
-              <input
-                type="email"
-                value={userEmail}
-                onChange={handleEmailChange}
-                placeholder="Enter your email"
-              />
-              <button onClick={saveEmailSettings}>Save Email</button>
+              <label style={labelStyle}>Slack Notifications</label>
             </div>
+          </div>
 
-            <div className="settings-section">
-              <label>Telegram Chat ID</label>
+          {/* Email Notifications */}
+          <div style={settingItemStyle}>
+            <div style={checkboxContainerStyle}>
               <input
-                type="text"
-                value={userTelegramChatId}
-                onChange={handleTelegramChatIdChange}
-                placeholder="Enter your Telegram Chat ID"
+                type="checkbox"
+                checked={emailNotifications}
+                onChange={() => setEmailNotifications(!emailNotifications)}
+                style={checkboxStyle}
               />
+              <label style={labelStyle}>Email Notifications</label>
             </div>
+          </div>
 
-            <div className="settings-section">
-              <label>FCM Token for Push Notifications</label>
-              <input
-                type="text"
-                value={userFCMToken}
-                onChange={handleFCMTokenChange}
-                placeholder="Enter your FCM Token"
-              />
-            </div>
+          <div className="settings-section" style={settingItemStyle}>
+            <label style={labelStyle}>Email for Notifications</label>
+            <input
+              type="email"
+              value={userEmail}
+              onChange={handleInputChange(setUserEmail)}
+              placeholder="Enter your email"
+              style={inputStyle}
+            />
+          </div>
 
-            <label>
-              Telegram Notifications
+          {/* Telegram Notifications */}
+          <div style={settingItemStyle}>
+            <div style={checkboxContainerStyle}>
               <input
                 type="checkbox"
                 checked={telegramNotifications}
-                onChange={handleTelegramNotificationChange}
+                onChange={() => setTelegramNotifications(!telegramNotifications)}
+                style={checkboxStyle}
               />
-            </label>
+              <label style={labelStyle}>Telegram Notifications</label>
+            </div>
+          </div>
 
-            <label>
-              Push Notifications
+          <div style={settingItemStyle}>
+            <label style={labelStyle}>Telegram Chat ID</label>
+            <input
+              type="text"
+              value={userTelegramChatId}
+              onChange={handleInputChange(setUserTelegramChatId)}
+              placeholder="Enter your Telegram Chat ID"
+              style={inputStyle}
+            />
+          </div>
+
+          {/* Phone Notifications (SMS & Call) */}
+          <div style={settingItemStyle}>
+            <div style={checkboxContainerStyle}>
               <input
                 type="checkbox"
-                checked={pushNotifications}
-                onChange={handlePushNotificationChange}
+                checked={phoneCallNotifications}
+                onChange={() => setPhoneCallNotifications(!phoneCallNotifications)}
+                style={checkboxStyle}
               />
-            </label>
+              <label style={labelStyle}>Phone Call Notifications</label>
+            </div>
+          </div>
+
+          <div style={settingItemStyle}>
+            <label style={labelStyle}>Phone Number</label>
+            <input
+              type="text"
+              value={userPhoneNumber}
+              onChange={handleInputChange(setUserPhoneNumber)}
+              placeholder="Enter your phone number"
+              style={inputStyle}
+            />
+          </div>
+
+          {/* Save Button */}
+          <div style={saveButtonContainer}>
+            <button onClick={handleSave} style={saveButtonStyle}>Save Changes</button>
           </div>
         </div>
       </div>
     </div>
   );
+};
+
+// Styles
+const containerStyle = {
+  padding: "30px",
+  backgroundColor: "#fff",
+  borderRadius: "8px",
+  margin: "30px",
+  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+};
+
+const headingStyle = {
+  textAlign: "center",
+  marginBottom: "20px",
+};
+
+const settingItemStyle = {
+  marginBottom: "20px",
+};
+
+const labelStyle = {
+  fontSize: "16px",
+  marginBottom: "8px",
+  display: "block",
+};
+
+const inputStyle = {
+  padding: "10px",
+  width: "95%",
+  border: "1px solid #ccc",
+  borderRadius: "5px",
+  marginBottom: "10px",
+};
+
+const checkboxStyle = {
+  marginTop: "10px",
+  width: "20px",
+  height: "20px",
+};
+
+const checkboxContainerStyle = {
+  display: "flex",
+  alignItems: "center",
+};
+
+const saveButtonContainer = {
+  textAlign: "center",
+  marginTop: "30px",
+};
+
+const saveButtonStyle = {
+  padding: "12px 24px",
+  backgroundColor: "#4CAF50",
+  color: "#fff",
+  border: "none",
+  borderRadius: "5px",
+  fontSize: "16px",
+  cursor: "pointer",
+  width: "100%",
 };
 
 export default Settings;

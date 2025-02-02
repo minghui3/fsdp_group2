@@ -1,26 +1,56 @@
-import React, { useState } from "react";
+import React from "react";
 import Sidebar from "../shared/Sidebar";
 import Navbar from "../shared/Navbar";
 import "../style/addProject.css";
+import { useState, useEffect } from "react";
+import { IoIosRemove } from "react-icons/io";
+
 const AddProject = () => {
 
-    // TODO: 
-    // 1. List added files (name + size)
-    // 2. Add remove button
-    // 3. Add pop up message to show success/failure
     const [files, setFiles] = useState([]);
+    const [override, setOverride] = useState(false);
+
+    useEffect(() => {
+        console.log(files);
+    }, [files]);
+
+    const addFiles = (newF) => {
+        const newFiles = [...files, ...Array.from(newF)];
+        const set = [...new Map(newFiles.map(f => [f.name, f])).values()];
+        setFiles(set);
+    }
+
+    const removeFile = (index) => {
+        setFiles(files.filter((_, i) => i !== index));
+    }
+
+    const handleInput = (e) => {
+        e.preventDefault();
+        addFiles(e.target.files);
+        e.target.value = "";
+    }
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        addFiles(e.dataTransfer.files);
+    }
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    }
+
+    const handleClick = () => {
+        document.getElementById("file").click();
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const fileInput = document.getElementById('file');
-        const files = fileInput.files;
-        console.log(fileInput);
 
         if (files.length === 0) {
             return;
         }
 
-        const url = "http://localhost:5000/api/test-case/add";
+        const URL = "http://localhost:5000/api/test-case/add";
 
         const formData = new FormData();
 
@@ -30,8 +60,9 @@ const AddProject = () => {
 
         formData.append("projectName", "test-cases")
         formData.append("userId", localStorage.getItem("userId"));
+        formData.append("override", override);
 
-        const response = await fetch(url, {
+        const response = await fetch(URL, {
             method: 'POST',
             body: formData,
         });
@@ -40,56 +71,44 @@ const AddProject = () => {
             const result = await response.json();
             console.log(result);
         }
+        else {
+            setFiles([]);
+        }
     }
 
     return (
-        <div style={{backgroundColor: "#f9f9f9"}}>
+        <div>
             <Sidebar />
-            <div style={{ marginLeft: "300px"}}>
+            <div style={{ marginLeft: "300px" }}>
                 <Navbar />
-                <div className="form-container" style={{marginTop: "30px", marginBottom: "30px"}}>
-                    <form className="project-info-form">
-                        <div className="form-group">
-                            <label for="projectRepo">Project Repo</label>
-                            <input id="projectRepo" type="text"></input>
+                <form id="form-test-cases" encType="multipart/form-data" >
+                    <div id="blablabla">
+                        <label for="file">Add Test Cases</label>
+                        <div id="divdivdiv">
+                            <label for="switch-input">Override</label>
+                            <label className="switch">
+                                <input id="switch-input" type="checkbox" checked={override} onChange={() => setOverride(prev => !prev)} />
+                                <span className="slider"></span>
+                            </label>
                         </div>
-                        <div className="form-group">
-                            <label for="testRepo">Test Repo</label>
-                            <input id="testRepo" type="text"></input>
-                        </div>
-                        <div className="form-group">
-                            <label for="pat">GitHub Personal Access Token</label>
-                            <input id="pat" type="text"></input>
-                        </div>
-                        <div className="form-group">
-                            <label for="env">Environment Variables</label>
-                            <textarea id="env" style={{ height: "300px", resize: "none" }}></textarea>
-                        </div>
-                        <div className="button-container">
-                            <button type="button" className="submit-button">Add</button>
-                        </div>
-                    </form>
-                    {/* File Upload Form */}
-                    <form action="http://localhost:5000/api/test-case/add" method="post" encType="multipart/form-data">
-                        <div className="file-upload">
-                            <label htmlFor="file">Test Cases</label>
-                            <input type="file" id="file" name="file" multiple accept=".feature, .java"></input>
-                            <button type="submit" className="file-submit-button">Submit</button>
-                        </div>
-                        <div className="file-list">
-                            {/* Display list of added files with names and sizes */}
-                            {files.length > 0 && (
-                                <ul>
-                                    {files.map((file, index) => (
-                                        <li key={index}>
-                                            <span>{file.name}</span> - {file.size} bytes
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <input type="file" id="file" name="file" multiple accept=".feature, .java" hidden onChange={handleInput}></input>
+                    <div id="drop-zone" onDragOver={handleDragOver} onDrop={handleDrop} onClick={handleClick}>
+                        <span class="hint">Drag and drop multiple files<br></br>or<br></br> Click to Select</span>
+                        <ul id="file-list">
+                            {files.length > 0 && files.map((f, i) => (
+                                <li key={i}>
+                                    <button type="button" onClick={(e) => {
+                                        e.stopPropagation();
+                                        removeFile(i);
+                                    }}><IoIosRemove /></button>
+                                    {f.name}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <button type="submit" onClick={handleSubmit}>Submit</button>
+                </form>
             </div>
         </div>
     )

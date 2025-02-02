@@ -12,6 +12,8 @@ const FilePath = {
     "feature": "src/test/resources/features",
 };
 
+const BRANCH = 'test';
+
 const processSubmission = async (job) => {
 
     const { userId, projectName, files, override } = job.data;
@@ -24,10 +26,17 @@ const processSubmission = async (job) => {
 
         const { cool, uncool } = await handleOverride(projectName, files, override);
 
+        console.log(`cool: ${cool.length}`);
+        console.log(`uncool: ${uncool.length}`)
+
         if (uncool.length !== 0) {
             console.log(`${logPrefix} FOUND DUPLICATE FILES`);
             await alertUser(userId, uncool);
-            return;
+        }
+
+        if (cool.length === 0) {
+            console.log(`${logPrefix} NO FILES TO PROCESS`);
+            return { processed: false };
         }
 
         const dbConnection = getDBConnection(projectName);
@@ -53,6 +62,8 @@ const processSubmission = async (job) => {
 
         console.log(`${logPrefix} DOING GIT STUFF`);
         await commitAndPush(`./repos/${projectName}`, cool.length);
+
+        return { processed: true };
     }
     catch (err) {
         console.error(err);
@@ -66,7 +77,7 @@ const alertUser = async (userId, files) => {
         const ws = getWebSocket(userId);
         ws.send(JSON.stringify({
             event: 'duplicate',
-            message: "There are duplicate files.",
+            message: "There are duplicate files that were skipped",
             files,
         }));
     }
@@ -135,6 +146,9 @@ const checkFileExists = async (projectDir, name) => {
 
 
 const handleOverride = async (projectName, files, override) => {
+    if (override) {
+        return { cool: files, uncool: [] };
+    }
     const projectDir = `./repos/${projectName}`;
     const cool = [];
     const uncool = [];
@@ -142,7 +156,8 @@ const handleOverride = async (projectName, files, override) => {
     const git = simpleGit(projectDir);
     await git
         .fetch('origin')
-        .checkout('test');
+        .checkout(BRANCH)
+        .pull();
 
     await Promise.all(files.map(async (f) => {
         const exists = await checkFileExists(projectDir, f.originalname);
@@ -152,10 +167,6 @@ const handleOverride = async (projectName, files, override) => {
             cool.push(f);
         }
     }));
-
-    if (override) {
-        cool.push(...uncool);
-    }
 
     return { cool, uncool };
 }
@@ -178,10 +189,10 @@ const commitAndPush = async (projectPath, fileCount) => {
         const git = simpleGit(projectPath);
         await git
             .fetch("origin")
-            .checkout("test")
+            .checkout(BRANCH)
             .add("*")
             .commit(`Add ${fileCount} files`)
-            .push("origin", "HEAD:refs/heads/test");
+            .push("origin", `HEAD:refs/heads/${BRANCH}`);
     }
     catch (err) {
         console.error(err);
