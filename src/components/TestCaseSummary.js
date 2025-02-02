@@ -33,15 +33,8 @@ const TestCaseSummary = ({ summaryData }) => {
                 <FaCogs size={50} className="card-icon total-test" />
                 </div>
                 <div className="card-right">
-                <h3 style={{fontSize:'14px', color:'#ACACAC', fontWeight:'400'}}>Total Test Cases</h3>
-                <p style={{ fontSize:'32px', color:'#333'}}>{totalTestCase.total}</p>
-                <div>
-                    <span style={{fontSize:'11px'}} className={`percentage ${getPercentageColor(calculatePercentageChange(currentMonth.total, lastMonth.total))}`}>
-                        <b>{currentMonth.total > lastMonth.total ? '↑ ' : '↓ '}</b>
-                        {calculatePercentageChange(currentMonth.total, lastMonth.total).toFixed(2)}%{' '}
-                    </span>
-                    <span style={{color:'#292d32', fontSize:'11px'}}> this month</span>
-                </div>
+                    <h3 style={{fontSize:'14px', color:'#ACACAC', fontWeight:'400'}}>Total Test Cases</h3>
+                    <p style={{ fontSize:'32px', color:'#333'}}>{totalTestCase.total}</p>
                 </div>
             </div>
 
@@ -51,15 +44,8 @@ const TestCaseSummary = ({ summaryData }) => {
                 <FaCheckCircle size={50} className="card-icon passed-test" />
                 </div>
                 <div className="card-right">
-                <h3 style={{fontSize:'14px', color:'#ACACAC', fontWeight:'400'}}>Passed</h3>
-                <p style={{ fontSize:'32px', color:'#333'}}>{currentMonth.passed.length}</p>
-                <div>
-                        <span style={{fontSize:'11px'}} className={`percentage ${getPercentageColor(calculatePercentageChange(currentMonth.passed.length, lastMonth.passed.length))}`}>
-                            <b>{currentMonth.passed.length > lastMonth.passed.length ? '↑ ' : '↓ '} </b>
-                            {calculatePercentageChange(currentMonth.passed.length, lastMonth.passed.length).toFixed(2)}%{' '} 
-                        </span>
-                        <span style={{color:'#292d32', fontSize:'11px'}}> this month</span>
-                </div>
+                    <h3 style={{fontSize:'14px', color:'#ACACAC', fontWeight:'400'}}>Passed</h3>
+                    <p style={{ fontSize:'32px', color:'#333'}}>{currentMonth.passed.length}</p>
                 </div>
             </div>
 
@@ -71,13 +57,6 @@ const TestCaseSummary = ({ summaryData }) => {
                 <div className="card-right">
                     <h3 style={{fontSize:'14px', color:'#ACACAC', fontWeight:'400'}}>Failed</h3>
                     <p style={{ fontSize:'32px', color:'#333'}}>{currentMonth.failed.length}</p>
-                    <div>
-                        <span  style={{fontSize:'11px'}} className={`percentage ${getPercentageColor(calculatePercentageChange(currentMonth.failed.length, lastMonth.failed.length))}`}>
-                            <b>{currentMonth.failed.length > lastMonth.failed.length ? '↑ ' : '↓ '}</b>
-                            {calculatePercentageChange(currentMonth.failed.length, lastMonth.failed.length).toFixed(2)}%{' '}
-                        </span>
-                        <span style={{color:'#292d32', fontSize:'11px'}}> this month</span>
-                    </div>
                 </div>
             </div>
         </div>
