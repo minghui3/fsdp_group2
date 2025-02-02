@@ -12,6 +12,8 @@ const FilePath = {
     "feature": "src/test/resources/features",
 };
 
+const BRANCH = 'test';
+
 const processSubmission = async (job) => {
 
     const { userId, projectName, files, override } = job.data;
@@ -27,7 +29,6 @@ const processSubmission = async (job) => {
         if (uncool.length !== 0) {
             console.log(`${logPrefix} FOUND DUPLICATE FILES`);
             await alertUser(userId, uncool);
-            return;
         }
 
         const dbConnection = getDBConnection(projectName);
@@ -142,7 +143,7 @@ const handleOverride = async (projectName, files, override) => {
     const git = simpleGit(projectDir);
     await git
         .fetch('origin')
-        .checkout('test');
+        .checkout(BRANCH);
 
     await Promise.all(files.map(async (f) => {
         const exists = await checkFileExists(projectDir, f.originalname);
@@ -178,10 +179,10 @@ const commitAndPush = async (projectPath, fileCount) => {
         const git = simpleGit(projectPath);
         await git
             .fetch("origin")
-            .checkout("test")
+            .checkout(BRANCH)
             .add("*")
             .commit(`Add ${fileCount} files`)
-            .push("origin", "HEAD:refs/heads/test");
+            .push("origin", `HEAD:refs/heads/${BRANCH}`);
     }
     catch (err) {
         console.error(err);
