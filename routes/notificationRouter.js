@@ -17,9 +17,19 @@ router.post("/sendTelegramNotification", (req, res) => {
     res.status(200).json({ success: true, message: "Notification sent to Telegram" });
 });
 
-router.post("/sendPushNotification", (req, res) => {
-    notificationController.sendPushNotification(req.body.fcmToken, req.body.message);
-    res.status(200).json({ success: true, message: "Notification sent to Push" });
+router.post("/sendCallNotification", async (req, res) => {
+    try {
+        const { type, to, message } = req.body;
+        if (!to) {
+            return res.status(400).json({ success: false, message: "Phone number is required!" });
+        }
+
+        const result = await notificationController.sendCallNotification(to, message);
+        res.status(200).json({ success: true, message: "Notification sent to Call", result });
+    } catch (error) {
+        console.error("Error sending call notification:", error);
+        res.status(500).json({ success: false, message: "Failed to send call notification" });
+    }
 });
 
 module.exports = router;

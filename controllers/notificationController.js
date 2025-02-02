@@ -4,6 +4,15 @@ const axios = require('axios');
 const nodemailer = require("nodemailer");
 const admin = require('firebase-admin');
 
+const twilio = require('twilio');
+// Twilio Credentials from .env file
+const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
+const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+
+// Initialize Twilio client
+const client = new twilio(twilioAccountSid, twilioAuthToken);
+
 // Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -63,19 +72,19 @@ exports.sendTelegramNotification = async (chatId, message) => {
   }
 };
 
-// Send Push Notification (via Firebase Cloud Messaging)
-exports.sendPushNotification = async (fcmToken, message) => {
-  const payload = {
-    notification: {
-      title: 'New Notification',
-      body: message,
-    },
+// Controller to send different types of notifications
+exports.sendCallNotification = async (to, message) => {
+    try {
+      const call = await client.calls.create({
+        twiml: `<Response><Say>${message}</Say></Response>`,
+        to: to,
+        from: twilioPhoneNumber,
+      });
+  
+      console.log("Call SID:", call.sid);
+      return { success: true, sid: call.sid };
+    } catch (error) {
+      console.error("Error sending call:", error);
+      throw error;
+    }
   };
-
-  try {
-    await admin.messaging().sendToDevice(fcmToken, payload);
-    console.log("Push notification sent successfully");
-  } catch (error) {
-    console.error("Error sending push notification:", error);
-  }
-};
