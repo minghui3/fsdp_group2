@@ -2,6 +2,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard.js";
 import AddProject from "./pages/AddProject";
 import TestCaseManagement from "./pages/TestCaseManagement";
+import Settings from "./pages/Settings.js";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { WebSocketProvider } from "./contexts/WebSocketContext.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -42,6 +43,10 @@ const Routes = () => {
                         {
                             path: "/test-case-management",
                             element: <TestCaseManagement />,
+                        },
+                        {
+                            path: "/settings",
+                            element: <Settings />,
                         },
                     ],
                 },

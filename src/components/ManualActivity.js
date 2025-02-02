@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { FaSearch, FaFilter } from 'react-icons/fa';
 import '../style/recentActivity.css'; // Import styling for recent activity
 
-const RecentActivity = () => {
+const ManualActivity = () => {
   // State variables
   const [recentActivities, setRecentActivities] = useState([]); // To hold fetched activities
   const [filteredActivities, setFilteredActivities] = useState([]); // To hold filtered activities based on search and filters
   const [searchQuery, setSearchQuery] = useState(''); // To hold the search query
+  const [selectedRows, setSelectedRows] = useState([]); // To hold selected row IDs
 
   // Filter state
   const [selectedResult, setSelectedResult] = useState(''); // To hold the selected result filter
@@ -20,18 +21,19 @@ const RecentActivity = () => {
     function generateUniqueId() {
       const generatedIds = new Set();
       let uniqueId;
-      
+
       do {
-          uniqueId = Math.floor(1000 + Math.random() * 9000); 
+        uniqueId = Math.floor(1000 + Math.random() * 9000); 
       } while (generatedIds.has(uniqueId));
-      
+
       generatedIds.add(uniqueId);
-      
+
       return uniqueId;
     }
+
     const transformToSimpleArray = (data) => {
       const transformed = [];
-    
+
       ['chrome', 'edge', 'firefox'].forEach((browser) => {
         if (data[browser]) {  // Check if the browser data exists
           data[browser].forEach((testSuite) => {
@@ -39,14 +41,14 @@ const RecentActivity = () => {
               test.scenarios.forEach((scenario) => {
                 if (scenario.type !== "background") {
                   const formattedDate = new Date(scenario.start_timestamp).toISOString().split('T')[0];
-    
+
                   transformed.push({
                     id: generateUniqueId(),
                     name: `${test.name} - ${scenario.name}`,
-                    executedBy: "auto",
-                    browser: browser,
+                    executedBy: "auto", // Keep as auto or fetch if necessary
+                    browser: browser,  // Keep if needed later
                     date: formattedDate,
-                    result: scenario.status === "passed" ? "Passed" : "Failed",
+                    result: scenario.status === "passed" ? "Passed" : "Failed", // Keep if needed later
                   });
                 }
               });
@@ -56,6 +58,7 @@ const RecentActivity = () => {
       });
       return transformed;
     };
+
     const fetchRecentActivities = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/get-test-results', {
@@ -66,8 +69,8 @@ const RecentActivity = () => {
           body: JSON.stringify({
             dbName: "PointPulseHR",
             browsers: ["Chrome", "Edge", "Firefox"]
-          }),
-        }); // Replace with your backend URL
+          }), // Replace with your backend URL
+        });
         const data = await response.json();
         const transformedData = transformToSimpleArray(data);
         setRecentActivities(transformedData); // Set the fetched data
@@ -162,11 +165,20 @@ const RecentActivity = () => {
     setIsFilterVisible((prev) => !prev);
   };
 
+  // Handle checkbox change to highlight row
+  const handleCheckboxChange = (id) => {
+    setSelectedRows((prevSelectedRows) =>
+      prevSelectedRows.includes(id)
+        ? prevSelectedRows.filter((rowId) => rowId !== id) // Deselect
+        : [...prevSelectedRows, id] // Select
+    );
+  };
+
   return (
     <div className="recent-activity-container">
       {/* Title, Search, and Filter */}
       <div className="activity-header">
-        <h2>Auto Test Cases</h2>
+        <h2>Manual Test Cases</h2>
         <div className="activity-controls">
           <div className="search-container">
             <input
@@ -236,29 +248,23 @@ const RecentActivity = () => {
           <tr>
             <th>ID</th>
             <th>Test Case Name</th>
-            <th>Executed By</th>
-            <th>Browser</th>
-            <th>Date</th>
-            <th>Result</th>
-            <th>Action</th>
+            <th>Checkbox</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.map((item) => (
-            <tr key={`${item.id}-${item.name}`}>
+            <tr
+              key={item.id}
+              className={selectedRows.includes(item.id) ? 'highlighted' : ''}
+            >
               <td>{item.id}</td>
               <td>{item.name}</td>
-              <td>{item.executedBy}</td>
-              <td>{item.browser}</td>
-              <td>{item.date}</td>
-              <td>
-                <span className={`result-badge ${item.result === 'Passed' ? 'pass' : 'fail'}`}>
-                  {item.result}
-                </span>
-              </td>
-              <td>
-                <button className="action-button" style={{ marginRight: '10px', backgroundColor: '#ff947a', border: '1px solid #ff947a' }}>Edit</button>
-                <button className="action-button" style={{ backgroundColor: '#e1251b', border: '1px solid #e1251b' }}>Delete</button>
+              <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                <input
+                  type="checkbox"
+                  checked={selectedRows.includes(item.id)}
+                  onChange={() => handleCheckboxChange(item.id)}
+                />
               </td>
             </tr>
           ))}
@@ -291,4 +297,4 @@ const RecentActivity = () => {
   );
 };
 
-export default RecentActivity;
+export default ManualActivity;

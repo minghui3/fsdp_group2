@@ -1,0 +1,191 @@
+
+/* Basic container and page layout */
+h2, h3 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  h4 {
+    color: #555;
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+  }
+  
+  /* Settings Container */
+  .settings-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Sidebar and Navbar positioning */
+  div[style*="marginLeft: 300px"] {
+    display: flex;
+    flex-direction: column;
+    margin-left: 300px;
+  }
+  
+  /* Section Title */
+  .settings-section {
+    margin-bottom: 2rem;
+  }
+  
+  /* Label styling */
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    font-size: 1rem;
+  }
+  
+  /* Select and Checkbox Styling */
+  select, input[type="checkbox"] {
+    margin-bottom: 1rem;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+  }
+  
+  /* Input field */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  /* Section Spacing */
+  .settings-section {
+    margin-bottom: 30px;
+  }
+  
+  /* Button Styling */
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Theme Select Styling */
+  select {
+    width: 200px;
+    display: inline-block;
+  }
+  
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .settings-container {
+      padding: 10px;
+    }
+  
+    .settings-section {
+      margin-bottom: 1rem;
+    }
+  
+    label {
+      font-size: 0.9rem;
+    }
+  
+    select, input[type="checkbox"] {
+      width: 100%;
+    }
+  
+    button {
+      width: 100%;
+      padding: 12px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .settings-container {
+      padding: 10px;
+    }
+  
+    h2 {
+      font-size: 1.25rem;
+    }
+  
+    h3 {
+      font-size: 1.1rem;
+    }
+  
+    .settings-section {
+      margin-bottom: 0.75rem;
+    }
+  
+    label {
+      font-size: 0.8rem;
+    }
+  }
+  
+  /* Buttons (if needed) */
+  button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Light & Dark Mode */
+  body[data-theme="dark"] {
+    background-color: #2c2c2c;
+    color: #fff;
+  }
+  
+  body[data-theme="dark"] .settings-container {
+    background-color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  body[data-theme="dark"] label,
+  body[data-theme="dark"] h2,
+  body[data-theme="dark"] h3,
+  body[data-theme="dark"] h4 {
+    color: #ccc;
+  }
+  
+  body[data-theme="dark"] input[type="text"],
+  body[data-theme="dark"] input[type="email"],
+  body[data-theme="dark"] input[type="password"],
+  body[data-theme="dark"] select {
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #666;
+  }
+  
+  body[data-theme="dark"] input[type="checkbox"] {
+    accent-color: #007bff;
+  }
