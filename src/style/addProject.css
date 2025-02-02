@@ -1,0 +1,57 @@
+#form-test-cases {
+    min-width: 300px;
+    width: 50%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#form-test-cases>button {
+    width: 8rem;
+    padding: 0.8rem;
+    cursor: pointer;
+}
+
+#form-test-cases label {
+    width: 100%;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+#drop-zone {
+    width: 100%;
+    border: 1px dashed #000;
+    text-align: center;
+    padding: 1rem 0;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+#drop-zone ul {
+    list-style: none;
+}
+
+#drop-zone li {
+    text-align: start;
+}
+
+#drop-zone li+li {
+    margin-top: 8px;
+}
+
+#drop-zone li>button {
+    cursor: pointer;
+    position: relative;
+    transform: translateY(0.3rem);
+    font-size: 1.4rem;
+    background: none;
+    color: red;
+    border: none;
+}
+
+span.hint {
+    font-style: italic;
+    color: hsl(0, 0%, 43%);
+}
