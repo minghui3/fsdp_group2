@@ -23,6 +23,6 @@ const upload = multer({ storage: storage });
 const router = express.Router();
 
 router.post("/add", upload.array("file", 10), controller.addTestCase);
-
+router.get("/get-test-cases", controller.getTestCases);
 module.exports = router;
 

@@ -4,73 +4,42 @@ import '../style/recentActivity.css'; // Import styling for recent activity
 
 const ManualActivity = () => {
   // State variables
-  const [recentActivities, setRecentActivities] = useState([]); // To hold fetched activities
+  const [manualActivities, setManualActivities] = useState([]); // To hold fetched activities
   const [filteredActivities, setFilteredActivities] = useState([]); // To hold filtered activities based on search
   const [searchQuery, setSearchQuery] = useState(''); // To hold the search query
   const [selectedRows, setSelectedRows] = useState([]); // To hold selected row IDs
+  const [buildStatus, setBuildStatus] = useState(null);
 
   // Add state for Send button visibility
   const [isSendButtonVisible, setIsSendButtonVisible] = useState(false);
 
   // Fetch recent activities from the backend when the component mounts
   useEffect(() => {
-    function generateUniqueId() {
-      const generatedIds = new Set();
-      let uniqueId;
-
-      do {
-        uniqueId = Math.floor(1000 + Math.random() * 9000); 
-      } while (generatedIds.has(uniqueId));
-
-      generatedIds.add(uniqueId);
-
-      return uniqueId;
-    }
-
-    const transformToSimpleArray = (data) => {
-      const transformed = [];
-      ['chrome', 'edge', 'firefox'].forEach((browser) => {
-        if (data[browser]) {
-          data[browser].forEach((testSuite) => {
-            testSuite.tests.forEach((test) => {
-              test.scenarios.forEach((scenario) => {
-                if (scenario.type !== "background") {
-                  const formattedDate = new Date(scenario.start_timestamp).toISOString().split('T')[0];
-
-                  transformed.push({
-                    id: generateUniqueId(),
-                    name: `${test.name} - ${scenario.name}`,
-                    executedBy: "auto",
-                    browser: browser,
-                    date: formattedDate,
-                    result: scenario.status === "passed" ? "Passed" : "Failed",
-                  });
-                }
-              });
-            });
-          });
-        }
-      });
+    const transformToSimpleArray = (data) =>{
+      const transformed = data.map((activity, index) =>({
+        id: index + 1,
+        name: activity.scenarioName,
+        tag: activity.tags[0],
+      }));
       return transformed;
     };
+    
 
-    const fetchRecentActivities = async () => {
+    const fetchManualActivities = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/get-test-results', {
-          method: 'POST',
-          headers: { 'Content-Type' : 'application/json' },
-          body: JSON.stringify({ dbName: "PointPulseHR", browsers: ["Chrome", "Edge", "Firefox"] }),
-        });
+        const response = await fetch('http://localhost:5000/api/test-case/get-test-cases', {
+          method: 'GET',
+        })
         const data = await response.json();
         const transformedData = transformToSimpleArray(data);
-        setRecentActivities(transformedData);
+        setManualActivities(transformedData);
         setFilteredActivities(transformedData);
       } catch (error) {
         console.error('Failed to fetch recent activities:', error);
       }
     };
 
-    fetchRecentActivities();
+    fetchManualActivities();
   }, []);
 
   // Handle search input change
@@ -80,7 +49,7 @@ const ManualActivity = () => {
 
   // Function to handle search functionality
   const handleSearch = () => {
-    const filtered = recentActivities.filter((activity) =>
+    const filtered = manualActivities.filter((activity) =>
       activity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       activity.executedBy.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -131,6 +100,95 @@ const ManualActivity = () => {
       return newSelectedRows;
     });
   };
+  
+  const handleSendBtnClick = async () =>{
+    const selectedTestCases = manualActivities
+    .filter((activity) => selectedRows.includes(activity.id))
+    .map((activity) => activity.tag);
+
+    try{
+      const response = await fetch('http://localhost:5000/api/jenkins/trigger-jenkins', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body : JSON.stringify({selectedTestCases})
+      });
+      const data = await response.json();
+      if (response.ok){
+        alert("Jenkins triggered successfully.");
+        pollJenkinsBuild("test-pipeline");
+      }
+      else{
+        alert("Jenkins failed to trigger", data.message);
+      }
+    }catch (error) {
+      console.error('Error sending request:', error);
+      alert('An error occurred while sending the request.');
+    }
+  }
+
+  const pollJenkinsBuild = async (jobName) => {
+    let isBuilding = false;
+    
+    // Step 1: Start by checking the job status to see if it has started
+    const checkJobStatus = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/jenkins/job-status?jobName=${jobName}`);
+        const data = await response.json();
+  
+        // Check if the job is building or in progress
+        if (data.status === "BUILDING" || data.status === "IN_PROGRESS") {
+          return true;
+        } else {
+          console.log("Job not started or completed yet.");
+          return false;
+        }
+      } catch (error) {
+        console.error("Error checking Jenkins job status:", error);
+        return false;
+      }
+    };
+  
+    // Step 2: Polling the job status until it completes
+    const poll = async () => {
+      // Initial check to see if the build has started
+      let jobStarted = await checkJobStatus();
+      while (!jobStarted) {
+        await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for 5 seconds
+        jobStarted = await checkJobStatus(); // Keep checking until the job starts
+      }
+  
+      // Once the job starts, continue polling until it's done
+      let isPolling = true;
+      while (isPolling) {
+        await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for 5 seconds
+  
+        try {
+          const response = await fetch(`http://localhost:5000/api/jenkins/job-status?jobName=${jobName}`);
+          const data = await response.json();
+  
+          console.log("Jenkins Build Status:", data.status);
+          setBuildStatus(data.status); // Update the build status UI
+          
+          // If the build is completed (SUCCESS or FAILURE), stop polling
+          if (data.status === "SUCCESS" || data.status === "FAILURE") {
+            alert(`Jenkins Build Completed: ${data.status}`);
+            isPolling = false; // Stop polling
+          }
+        } catch (error) {
+          console.error("Error polling Jenkins:", error);
+          alert("Error while polling Jenkins.");
+          isPolling = false;
+        }
+      }
+    };
+  
+    // Start polling the Jenkins build
+    poll();
+  };
+  
+  
 
   return (
     <div className="recent-activity-container">
@@ -153,7 +211,7 @@ const ManualActivity = () => {
 
           {/* Send Button */}
           {isSendButtonVisible && (
-            <button onClick={() => alert("Send button clicked!")}>Send</button>
+            <button onClick={handleSendBtnClick}>Send</button>
           )}
         </div>
       </div>
@@ -164,7 +222,7 @@ const ManualActivity = () => {
           <tr>
             <th>ID</th>
             <th>Test Case Name</th>
-            <th>Checkbox</th>
+            <th>Run</th>
           </tr>
         </thead>
         <tbody>

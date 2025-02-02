@@ -9,6 +9,7 @@ const userRouter = require("./routes/userRouter");
 const testResultRouter = require("./routes/testResultRouter");
 const testCaseRouter = require("./routes/testCaseRouter");
 const notificationRouter = require('./routes/notificationRouter');
+const jenkinsRouter = require('./routes/jenkinsRouter');
 const port = 5000;
 const app = express();
 
@@ -20,6 +21,7 @@ app.use("/", userRouter);
 app.use("/api", testResultRouter);
 app.use("/api/test-case", testCaseRouter);
 app.use('/api', notificationRouter);
+app.use('/api/jenkins', jenkinsRouter);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
