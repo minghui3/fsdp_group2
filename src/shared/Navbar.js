@@ -23,7 +23,7 @@ const Navbar = () => {
   // Define page titles based on routes within the function scope
   const pageTitles = {
     '/dashboard': 'Dashboard',
-    '/test-case-management': 'Test Case Management',
+    '/test-case-management': 'Test Case Result',
     '/help': 'Help',
     '/dashboard/profile': 'Profile',
     '/settings': 'Settings',

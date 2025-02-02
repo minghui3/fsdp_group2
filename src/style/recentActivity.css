@@ -197,3 +197,21 @@
     border: none;
     cursor: pointer;
   }
+
+  /* Center the checkbox */
+.activity-table th:last-child,
+.activity-table td:last-child {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Highlighted row */
+.activity-table tr.highlighted {
+  background-color: #f0f8ff; /* Light blue background */
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+/* Optional: Style for checkboxes (if needed) */
+.activity-table td input[type="checkbox"] {
+  margin: 0 auto;
+}
