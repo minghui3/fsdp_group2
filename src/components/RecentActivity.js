@@ -29,6 +29,7 @@ const RecentActivity = () => {
       
       return uniqueId;
     }
+
     const transformToSimpleArray = (data) => {
       const transformed = [];
     
@@ -56,6 +57,7 @@ const RecentActivity = () => {
       });
       return transformed;
     };
+
     const fetchRecentActivities = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/get-test-results', {
@@ -67,7 +69,7 @@ const RecentActivity = () => {
             dbName: "PointPulseHR",
             browsers: ["Chrome", "Edge", "Firefox"]
           }),
-        }); // Replace with your backend URL
+        });
         const data = await response.json();
         const transformedData = transformToSimpleArray(data);
         setRecentActivities(transformedData); // Set the fetched data
@@ -160,6 +162,30 @@ const RecentActivity = () => {
   // Toggle filter visibility
   const toggleFilterVisibility = () => {
     setIsFilterVisible((prev) => !prev);
+  };
+
+  // Handle deletion of activity
+  const handleDelete = async (id) => {
+    try {
+      // Perform delete operation with backend
+      const response = await fetch(`http://localhost:5000/api/delete-test-result/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // Remove the activity from the state after deletion
+        setRecentActivities((prevActivities) => 
+          prevActivities.filter((activity) => activity.id !== id)
+        );
+        setFilteredActivities((prevActivities) => 
+          prevActivities.filter((activity) => activity.id !== id)
+        );
+      } else {
+        console.error('Failed to delete the activity');
+      }
+    } catch (error) {
+      console.error('Error deleting the activity:', error);
+    }
   };
 
   return (
@@ -257,8 +283,13 @@ const RecentActivity = () => {
                 </span>
               </td>
               <td>
-                <button className="action-button" style={{ marginRight: '10px', backgroundColor: '#ff947a', border: '1px solid #ff947a' }}>Edit</button>
-                <button className="action-button" style={{ backgroundColor: '#e1251b', border: '1px solid #e1251b' }}>Delete</button>
+                <button
+                  className="action-button"
+                  style={{ backgroundColor: '#e1251b', border: '1px solid #e1251b' }}
+                  onClick={() => handleDelete(item.id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
