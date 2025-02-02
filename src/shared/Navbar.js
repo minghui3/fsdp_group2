@@ -26,7 +26,7 @@ const Navbar = () => {
     '/test-case-management': 'Test Case Management',
     '/help': 'Help',
     '/dashboard/profile': 'Profile',
-    '/dashboard/settings': 'Settings',
+    '/settings': 'Settings',
     '/add-project': 'Add Project',
   };
 
@@ -62,10 +62,10 @@ const Navbar = () => {
 
       {/* Notification and profile dropdown on the right */}
       <div className="navbar-right">
-        {/* Notification icon */}
+        {/* Notification icon 
         <div className="icon notification-icon">
           <FaBell size={20} />
-        </div>
+        </div>*/}
 
         {/* Profile dropdown */}
         <div className="icon profile-icon" onClick={toggleProfileDropdown}>

@@ -115,7 +115,6 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  height: 400px; /* Set a consistent fixed height for all rows */
   gap: 20px; /* Space between charts */
   box-sizing: border-box;
   padding: 0 30px;
@@ -170,6 +169,28 @@
 .browser-coverage-container canvas {
   height: 100% !important; /* Stretch to full container height */
   width: 100% !important;  /* Stretch to full container width */
+}
+
+.test-button {
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  background-color: #5cbc5f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.test-button:hover {
+  background-color: #45a049;
+}
+
+.test-button:focus {
+  outline: none;
+  background-color: #2a732e;
+  box-shadow: 0 0 5px #45a049;
 }
 
 

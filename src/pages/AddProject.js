@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "../shared/Sidebar";
 import Navbar from "../shared/Navbar";
-
+import "../style/addProject.css";
 const AddProject = () => {
 
     // TODO: 
     // 1. List added files (name + size)
     // 2. Add remove button
     // 3. Add pop up message to show success/failure
-
+    const [files, setFiles] = useState([]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -43,34 +43,53 @@ const AddProject = () => {
     }
 
     return (
-        <div>
+        <div style={{backgroundColor: "#f9f9f9"}}>
             <Sidebar />
-            <div style={{ marginLeft: "300px" }}>
+            <div style={{ marginLeft: "300px"}}>
                 <Navbar />
-                <form style={{ width: "500px", display: "flex", flexDirection: "column", margin: "0 auto", gap: "20px" }}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        <label for="projectRepo">Project Repo</label>
-                        <input id="projectRepo" style={{ padding: "5px" }} type="text"></input>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        <label for="testRepo">Test Repo</label>
-                        <input id="testRepo" style={{ padding: "5px" }} type="text"></input>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        <label for="pat">GitHub Personal Access Token</label>
-                        <input id="pat" style={{ padding: "5px" }} type="text"></input>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        <label for="env">Environment Variables</label>
-                        <textarea id="env" style={{ height: "300px", resize: "none" }}></textarea>
-                    </div>
-                    <button type="button" style={{ margin: "20px auto 0", width: "fit-content", padding: "0.5rem 2rem", fontWeight: "Bold" }}>Add</button>
-                </form>
-                <form action="http://localhost:5000/api/test-case/add" method="post" encType="multipart/form-data" >
-                    <label for="file">Test Cases</label>
-                    <input type="file" id="file" name="file" multiple accept=".feature, .java"></input>
-                    <button type="submit" onClick={handleSubmit}>Submit</button>
-                </form>
+                <div className="form-container" style={{marginTop: "30px", marginBottom: "30px"}}>
+                    <form className="project-info-form">
+                        <div className="form-group">
+                            <label for="projectRepo">Project Repo</label>
+                            <input id="projectRepo" type="text"></input>
+                        </div>
+                        <div className="form-group">
+                            <label for="testRepo">Test Repo</label>
+                            <input id="testRepo" type="text"></input>
+                        </div>
+                        <div className="form-group">
+                            <label for="pat">GitHub Personal Access Token</label>
+                            <input id="pat" type="text"></input>
+                        </div>
+                        <div className="form-group">
+                            <label for="env">Environment Variables</label>
+                            <textarea id="env" style={{ height: "300px", resize: "none" }}></textarea>
+                        </div>
+                        <div className="button-container">
+                            <button type="button" className="submit-button">Add</button>
+                        </div>
+                    </form>
+                    {/* File Upload Form */}
+                    <form action="http://localhost:5000/api/test-case/add" method="post" encType="multipart/form-data">
+                        <div className="file-upload">
+                            <label htmlFor="file">Test Cases</label>
+                            <input type="file" id="file" name="file" multiple accept=".feature, .java"></input>
+                            <button type="submit" className="file-submit-button">Submit</button>
+                        </div>
+                        <div className="file-list">
+                            {/* Display list of added files with names and sizes */}
+                            {files.length > 0 && (
+                                <ul>
+                                    {files.map((file, index) => (
+                                        <li key={index}>
+                                            <span>{file.name}</span> - {file.size} bytes
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     )

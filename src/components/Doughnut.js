@@ -67,13 +67,13 @@ const DoughnutChart = ({ resultCount }) => {
             <h2 style={{textAlign: "center"}}>{browser} Test Results</h2>
             <Doughnut data={data} options={options} />
             <div style={{display: "flex", justifyContent:"center", gap:"10px"}}>
-                <button type="button" onClick={() => toggleData(0)}>
+                <button className="test-button" type="button" onClick={() => toggleData(0)}>
                     Chrome
                 </button>
-                <button type="button" onClick={() => toggleData(1)}>
+                <button className="test-button" type="button" onClick={() => toggleData(1)}>
                     Edge
                 </button>
-                <button type="button" onClick={() => toggleData(2)}>
+                <button className="test-button" type="button" onClick={() => toggleData(2)}>
                     Firefox
                 </button>
             </div>

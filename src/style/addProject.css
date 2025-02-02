@@ -1,0 +1,98 @@
+/* AddProject.css */
+  /* Container for the form */
+  .form-container {
+    width: 60%;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Form field styling */
+  .form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  
+  .form-group textarea {
+    height: 150px;
+    resize: vertical;
+  }
+  
+  /* Button styling */
+  .submit-button {
+    width: 100%;
+    margin: 20px auto;
+    padding: 10px 30px;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #45a049;
+  }
+  
+  /* File upload section */
+  .file-upload {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Adds spacing between elements */
+  }
+  
+  .file-upload label {
+    font-weight: bold;
+    white-space: nowrap; /* Prevents text from wrapping */
+  }
+  
+  .file-upload input {
+    flex-grow: 1; /* Allows the input to take available space */
+  }
+  
+  .file-submit-button {
+    padding: 10px 20px;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .file-submit-button:hover {
+    background-color: #45a049;
+  }
+  
+  .file-list {
+    margin-top: 10px;
+  }
+  
+  /* Responsive Styles */
+  @media screen and (max-width: 768px) {
+    .main-content {
+      margin-left: 0;
+    }
+  
+    .form-container {
+      width: 90%;
+    }
+  }
