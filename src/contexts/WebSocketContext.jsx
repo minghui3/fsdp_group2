@@ -1,10 +1,14 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import { Outlet } from 'react-router-dom';
+import Notification from "../components/Notification";
+import PopUp from "../components/PopUp";
 
 const WebSocketContext = createContext(null);
 
 export const WebSocketProvider = ({ userId }) => {
     const [ws, setWs] = useState(null);
+    const [noti, setNoti] = useState([]);
+    const [popUp, setPopUp] = useState(null);
 
     useEffect(() => {
         if (!userId) {
@@ -26,19 +30,33 @@ export const WebSocketProvider = ({ userId }) => {
         };
 
         newWs.onmessage = (msg) => {
-            const message = JSON.parse(msg.data);
-            console.log(message);
+            const { event, message, files } = JSON.parse(msg.data);
+            switch (event) {
+                case "job complete":
+                case "job failed":
+                    setNoti((prev) => [...prev, { event, message }]);
+                    break;
+                case "duplicate":
+                    setNoti((prev) => [...prev, { event, message, files }]);
+                    break;
+                default:
+                    return;
+            };
         };
 
-        setWs(newWs)
+        setWs(newWs);
 
         return () => {
-            newWs.close();
+            if (newWs.readyState === 1) {
+                newWs.close();
+            }
         }
     }, [userId]);
 
     return (
-        <WebSocketContext.Provider value={ws}>
+        <WebSocketContext.Provider value={{ ws, noti, setNoti, popUp, setPopUp }}>
+            <Notification />
+            <PopUp />
             <Outlet />
         </WebSocketContext.Provider>
     );
