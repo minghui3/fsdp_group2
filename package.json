@@ -36,6 +36,7 @@
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.80.6",
     "simple-git": "^3.27.0",
+    "twilio": "^5.4.3",
     "web-vitals": "^2.1.4",
     "ws": "^8.18.0"
   },

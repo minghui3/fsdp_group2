@@ -58,18 +58,6 @@ h2, h3 {
     margin-right: 10px;
   }
   
-  /* Input field */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-  }
-  
   /* Section Spacing */
   .settings-section {
     margin-bottom: 30px;
@@ -146,7 +134,7 @@ h2, h3 {
   /* Buttons (if needed) */
   button {
     padding: 10px 15px;
-    background-color: #007bff;
+    background-color: #4caf50;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -156,7 +144,7 @@ h2, h3 {
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: #247b27;
   }
   
   /* Light & Dark Mode */
