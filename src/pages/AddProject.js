@@ -8,13 +8,16 @@ import { IoIosRemove } from "react-icons/io";
 const AddProject = () => {
 
     const [files, setFiles] = useState([]);
+    const [override, setOverride] = useState(false);
 
     useEffect(() => {
         console.log(files);
     }, [files]);
 
     const addFiles = (newF) => {
-        setFiles([...files, ...Array.from(newF)]);
+        const newFiles = [...files, ...Array.from(newF)];
+        const set = [...new Map(newFiles.map(f => [f.name, f])).values()];
+        setFiles(set);
     }
 
     const removeFile = (index) => {
@@ -40,12 +43,6 @@ const AddProject = () => {
         document.getElementById("file").click();
     }
 
-    // TODO: 
-    // 1. List added files (name + size)
-    // 2. Add remove button
-    // 3. Add pop up message to show success/failure
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -63,6 +60,7 @@ const AddProject = () => {
 
         formData.append("projectName", "test-cases")
         formData.append("userId", localStorage.getItem("userId"));
+        formData.append("override", override);
 
         const response = await fetch(URL, {
             method: 'POST',
@@ -72,6 +70,8 @@ const AddProject = () => {
         if (!response.ok) {
             const result = await response.json();
             console.log(result);
+        }
+        else {
             setFiles([]);
         }
     }
@@ -82,7 +82,16 @@ const AddProject = () => {
             <div style={{ marginLeft: "300px" }}>
                 <Navbar />
                 <form id="form-test-cases" encType="multipart/form-data" >
-                    <label for="file">Add Test Cases</label>
+                    <div id="blablabla">
+                        <label for="file">Add Test Cases</label>
+                        <div id="divdivdiv">
+                            <label for="switch-input">Override</label>
+                            <label className="switch">
+                                <input id="switch-input" type="checkbox" checked={override} onChange={() => setOverride(prev => !prev)} />
+                                <span className="slider"></span>
+                            </label>
+                        </div>
+                    </div>
                     <input type="file" id="file" name="file" multiple accept=".feature, .java" hidden onChange={handleInput}></input>
                     <div id="drop-zone" onDragOver={handleDragOver} onDrop={handleDrop} onClick={handleClick}>
                         <span class="hint">Drag and drop multiple files<br></br>or<br></br> Click to Select</span>

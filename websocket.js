@@ -1,5 +1,4 @@
 const { WebSocketServer } = require("ws");
-
 const socketMap = new Map();
 const wss = new WebSocketServer({ port: 42069 });
 
@@ -20,11 +19,22 @@ wss.on("connection", (ws, req) => {
 
     ws.onclose = () => {
         console.log("deleting socket", userId);
-        socketMap.delete(userId);
+        console.log(userId, " still has socket? ", socketMap.has(userId));
     }
 
     ws.onerror = (err) => {
         console.log("socket error", err);
+    }
+
+    ws.onmessage = (msg) => {
+        console.log(msg);
+    }
+
+    if (socketMap.has(userId)) {
+        console.log('duplicate socket');
+        socketMap.get(userId).close();
+        socketMap.set(userId, ws);
+        return;
     }
 
     console.log("setting new socket", userId);

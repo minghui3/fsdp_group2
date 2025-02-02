@@ -11,7 +11,7 @@ const checkRepoExists = async (projectName) => {
 const addTestCase = async (req, res) => {
     try {
         const { projectName, userId } = req.body;
-        const override = req.body.override || false;
+        const override = req.body.override === "false" ? false : true;
         const files = req.files;
         const submissionPath = req.dest;
 
